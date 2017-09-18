@@ -60,7 +60,10 @@ OpNoviceDetectorConstruction::OpNoviceDetectorConstruction()
   fWorld_x = fWorld_y = fWorld_z = 1.0*m;
 
   fBGOCrystal_x  = fBGOCrystal_y  = 21.*mm; fBGOCrystal_z  = 23.*cm;
+  fBGOCrystal_abslen = 3.*m;
+
   fPbF2Crystal_x = fPbF2Crystal_y = 30.*mm; fPbF2Crystal_z = 14.*cm;
+  fPbF2Crystal_abslen = 3.*m;
 
   fPaint = 100.*um; // Thickness of paint coating around crystal
 
@@ -142,11 +145,16 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   assert(sizeof(bgoRefractiveIndex) == sizeof(bgoPhotonEnergy));
 
   // Need to find the right table
-  G4double bgoAbsorption[] =
-    { 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
-      3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
-      3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
-      3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m };
+  G4double bgoAbsorption[] = {
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen
+  };
   assert(sizeof(bgoAbsorption) == sizeof(bgoPhotonEnergy));
 
   G4double bgoScintFastComp[] = 
@@ -177,7 +185,10 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   const G4int pbf2NEntries = sizeof(pbf2PhotonEnergy)/sizeof(G4double);
   G4double pbf2RefractiveIndex[] = { 1.749, 1.755, 1.765, 1.782, 1.818, 1.937 };
   assert(sizeof(pbf2RefractiveIndex) == sizeof(pbf2PhotonEnergy));
-  G4double pbf2Absorption[] = { 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m };
+  G4double pbf2Absorption[] = {
+    fPbF2Crystal_abslen, fPbF2Crystal_abslen, fPbF2Crystal_abslen,
+    fPbF2Crystal_abslen, fPbF2Crystal_abslen, fPbF2Crystal_abslen
+  };
   assert(sizeof(pbf2Absorption) == sizeof(pbf2PhotonEnergy));
 
   G4MaterialPropertiesTable* pbf2MPT = new G4MaterialPropertiesTable();

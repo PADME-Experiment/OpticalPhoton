@@ -59,6 +59,8 @@ private:
   G4UIdirectory*                fDetectorDir;
   G4UIcmdWithAnInteger*         fDetectorModeCmd;
   G4UIcmdWithADoubleAndUnit*    fPbF2CryLenCmd;
+  G4UIcmdWithADoubleAndUnit*    fPbF2CryAbsLenCmd;
+  G4UIcmdWithADoubleAndUnit*    fBGOCryAbsLenCmd;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

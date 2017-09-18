@@ -60,6 +60,16 @@ OpNoviceDetectorMessenger::
   fDetectorModeCmd->SetRange("mode == 0 || mode == 1");
   fDetectorModeCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
+  fBGOCryAbsLenCmd = new G4UIcmdWithADoubleAndUnit("/OpNovice/detector/bgo_crystal_absorption_length",this);
+  fBGOCryAbsLenCmd->SetGuidance("Set absorption length of BGO crystal");
+  fBGOCryAbsLenCmd->SetGuidance("N.B. Assumes it does not depend on photon energy");
+  fBGOCryAbsLenCmd->SetParameterName("len",true);
+  fBGOCryAbsLenCmd->SetUnitCategory("Length");
+  fBGOCryAbsLenCmd->SetDefaultUnit("cm");
+  fBGOCryAbsLenCmd->SetDefaultValue(300.0);
+  fBGOCryAbsLenCmd->SetRange("len > 0. && len < 1000.");
+  fBGOCryAbsLenCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
   fPbF2CryLenCmd = new G4UIcmdWithADoubleAndUnit("/OpNovice/detector/pbf2_crystal_length",this);
   fPbF2CryLenCmd->SetGuidance("Set length of PbF2 crystal");
   fPbF2CryLenCmd->SetParameterName("len",true);
@@ -69,6 +79,16 @@ OpNoviceDetectorMessenger::
   fPbF2CryLenCmd->SetRange("len > 0. && len < 300.");
   fPbF2CryLenCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
+  fPbF2CryAbsLenCmd = new G4UIcmdWithADoubleAndUnit("/OpNovice/detector/pbf2_crystal_absorption_length",this);
+  fPbF2CryAbsLenCmd->SetGuidance("Set absorption length of PbF2 crystal");
+  fPbF2CryAbsLenCmd->SetGuidance("N.B. Assumes it does not depend on photon energy");
+  fPbF2CryAbsLenCmd->SetParameterName("len",true);
+  fPbF2CryAbsLenCmd->SetUnitCategory("Length");
+  fPbF2CryAbsLenCmd->SetDefaultUnit("cm");
+  fPbF2CryAbsLenCmd->SetDefaultValue(300.0);
+  fPbF2CryAbsLenCmd->SetRange("len > 0. && len < 1000.");
+  fPbF2CryAbsLenCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -76,7 +96,9 @@ OpNoviceDetectorMessenger::
 OpNoviceDetectorMessenger::~OpNoviceDetectorMessenger()
 {
   delete fDetectorModeCmd;
+  delete fBGOCryAbsLenCmd;
   delete fPbF2CryLenCmd;
+  delete fPbF2CryAbsLenCmd;
   delete fDetectorDir;
 }
 
@@ -86,7 +108,9 @@ void OpNoviceDetectorMessenger::SetNewValue( G4UIcommand* command, G4String newV
 {
 
   if ( command == fDetectorModeCmd ) fOpNoviceDetector->SetDetectorMode(fDetectorModeCmd->GetNewIntValue(newValue));
+  if ( command == fBGOCryAbsLenCmd ) fOpNoviceDetector->SetBGOCrystalAbsLength(fBGOCryAbsLenCmd->GetNewDoubleValue(newValue));
   if ( command == fPbF2CryLenCmd ) fOpNoviceDetector->SetPbF2CrystalLength(fPbF2CryLenCmd->GetNewDoubleValue(newValue));
+  if ( command == fPbF2CryAbsLenCmd ) fOpNoviceDetector->SetPbF2CrystalAbsLength(fPbF2CryAbsLenCmd->GetNewDoubleValue(newValue));
 
 }
 
