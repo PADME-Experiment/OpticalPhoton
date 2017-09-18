@@ -4,10 +4,12 @@
 
 # Use BGO 21x21x230mm (default)
 #/OpNovice/detector/mode 0
+#/OpNovice/detector/bgo_crystal_absorption_length 300. cm
 
 # Use PbF2 30x30x140mm
 #/OpNovice/detector/mode 1
 #/OpNovice/detector/pbf2_crystal_length 14. cm
+#/OpNovice/detector/pbf2_crystal_absorption_length 300. cm
 
 /run/initialize
 

@@ -53,7 +53,12 @@ public:
 
   virtual G4VPhysicalVolume* Construct();
   void SetDetectorMode(G4int m) { fDetectorMode = m; }
+
+  void SetBGOCrystalAbsLength(G4double l) { fBGOCrystal_abslen = l; }
+
+  void SetPbF2CrystalAbsLength(G4double l) { fPbF2Crystal_abslen = l; }
   void SetPbF2CrystalLength(G4double l) { fPbF2Crystal_z = l; }
+
   G4double GetCrystalLength();
 
 private:
@@ -70,10 +75,14 @@ private:
   G4double fBGOCrystal_y;
   G4double fBGOCrystal_z;
 
+  G4double fBGOCrystal_abslen;
+
   G4double fPbF2Crystal_x;
   G4double fPbF2Crystal_y;
   G4double fPbF2Crystal_z;
   
+  G4double fPbF2Crystal_abslen;
+
   G4double fPaint;
 
 };
