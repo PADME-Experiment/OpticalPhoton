@@ -56,8 +56,8 @@ public:
 
   void SetBGOCrystalAbsLength(G4double l) { fBGOCrystal_abslen = l; }
 
-  void SetPbF2CrystalAbsLength(G4double l) { fPbF2Crystal_z = l; }
-  void SetPbF2CrystalLength(G4double l) { fPbF2Crystal_abslen = l; }
+  void SetPbF2CrystalAbsLength(G4double l) { fPbF2Crystal_abslen = l; }
+  void SetPbF2CrystalLength(G4double l) { fPbF2Crystal_z = l; }
 
   G4double GetCrystalLength();
 
