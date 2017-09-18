@@ -38,6 +38,7 @@
 #include "OpNoviceDetectorConstruction.hh"
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -59,6 +60,15 @@ OpNoviceDetectorMessenger::
   fDetectorModeCmd->SetRange("mode == 0 || mode == 1");
   fDetectorModeCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
+  fPbF2CryLenCmd = new G4UIcmdWithADoubleAndUnit("/OpNovice/detector/pbf2_crystal_length",this);
+  fPbF2CryLenCmd->SetGuidance("Set length of PbF2 crystal");
+  fPbF2CryLenCmd->SetParameterName("len",true);
+  fPbF2CryLenCmd->SetUnitCategory("Length");
+  fPbF2CryLenCmd->SetDefaultUnit("mm");
+  fPbF2CryLenCmd->SetDefaultValue(140.0);
+  fPbF2CryLenCmd->SetRange("len > 0. && len < 300.");
+  fPbF2CryLenCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -66,6 +76,7 @@ OpNoviceDetectorMessenger::
 OpNoviceDetectorMessenger::~OpNoviceDetectorMessenger()
 {
   delete fDetectorModeCmd;
+  delete fPbF2CryLenCmd;
   delete fDetectorDir;
 }
 
@@ -75,6 +86,7 @@ void OpNoviceDetectorMessenger::SetNewValue( G4UIcommand* command, G4String newV
 {
 
   if ( command == fDetectorModeCmd ) fOpNoviceDetector->SetDetectorMode(fDetectorModeCmd->GetNewIntValue(newValue));
+  if ( command == fPbF2CryLenCmd ) fOpNoviceDetector->SetPbF2CrystalLength(fPbF2CryLenCmd->GetNewDoubleValue(newValue));
 
 }
 

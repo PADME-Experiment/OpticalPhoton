@@ -42,6 +42,7 @@
 class OpNoviceDetectorConstruction;
 class G4UIdirectory;
 class G4UIcmdWithAnInteger;
+class G4UIcmdWithADoubleAndUnit;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -57,6 +58,7 @@ private:
   OpNoviceDetectorConstruction* fOpNoviceDetector;
   G4UIdirectory*                fDetectorDir;
   G4UIcmdWithAnInteger*         fDetectorModeCmd;
+  G4UIcmdWithADoubleAndUnit*    fPbF2CryLenCmd;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
