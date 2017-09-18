@@ -4,10 +4,16 @@
 
 # Use BGO 21x21x230mm (default)
 #/OpNovice/detector/mode 0
+
 # Use PbF2 30x30x140mm
 #/OpNovice/detector/mode 1
+#/OpNovice/detector/pbf2_crystal_length 14. cm
 
 /run/initialize
+
+# Switch off tracking/boundary messages
+#/tracking/verbose 0
+#/OpNovice/phys/verbose 0
 
 # Generate optical photons (1evt = 1photon) at given position inside BGO
 #/OpNovice/gun/mode 0

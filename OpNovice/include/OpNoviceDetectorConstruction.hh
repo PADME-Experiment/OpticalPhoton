@@ -53,6 +53,7 @@ public:
 
   virtual G4VPhysicalVolume* Construct();
   void SetDetectorMode(G4int m) { fDetectorMode = m; }
+  void SetPbF2CrystalLength(G4double l) { fPbF2Crystal_z = l; }
   G4double GetCrystalLength();
 
 private:
