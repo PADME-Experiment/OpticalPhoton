@@ -78,7 +78,7 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
     G4ThreeVector pre = step->GetPreStepPoint()->GetPosition();
     G4ThreeVector post = step->GetPostStepPoint()->GetPosition();
     if (post.z() == 0.5*fDetectorConstruction->GetCrystalLength()) {
-      printf("*** Killing photon on PMT surface at P = (%.3f,%.3f,%.3f) mm T = %.3f ns ***\n",post.x()/mm,post.y()/mm,post.z()/mm,step->GetPostStepPoint()->GetGlobalTime()/ns);
+      printf("*** Killing photon on PMT surface at P = (%.3f,%.3f,%.3f) mm T = %.3f ns E = %.3f eV ***\n",post.x()/mm,post.y()/mm,post.z()/mm,step->GetPostStepPoint()->GetGlobalTime()/ns,track->GetTotalEnergy()/eV);
       track->SetTrackStatus(fStopAndKill);
     }
     return;

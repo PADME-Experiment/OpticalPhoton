@@ -56,8 +56,9 @@ public:
 
   void SetBGOCrystalAbsLength(G4double l) { fBGOCrystal_abslen = l; }
 
-  void SetPbF2CrystalAbsLength(G4double l) { fPbF2Crystal_abslen = l; }
   void SetPbF2CrystalLength(G4double l) { fPbF2Crystal_z = l; }
+  void SetPbF2CrystalAbsLength(G4double l) { fPbF2Crystal_abslen = l; }
+  void SetPbF2CrystalReflectivity(G4double r) { fPbF2Crystal_reflectivity = r; }
 
   G4double GetCrystalLength();
 
@@ -81,7 +82,8 @@ private:
   G4double fPbF2Crystal_y;
   G4double fPbF2Crystal_z;
   
-  G4double fPbF2Crystal_abslen;
+  G4double fPbF2Crystal_abslen; // Scale factor for absorption length spectrum
+  G4double fPbF2Crystal_reflectivity; // Reflectivity factor
 
   G4double fPaint;
 
