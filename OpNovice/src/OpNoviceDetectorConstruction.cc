@@ -63,7 +63,9 @@ OpNoviceDetectorConstruction::OpNoviceDetectorConstruction()
   fBGOCrystal_abslen = 3.*m;
 
   fPbF2Crystal_x = fPbF2Crystal_y = 30.*mm; fPbF2Crystal_z = 14.*cm;
-  fPbF2Crystal_abslen = 3.*m;
+  fPbF2Crystal_abslen = 1.; // Default scale factor
+  fPbF2Crystal_reflectivity = 0.95; // Default reflectivity factor
+
 
   fPaint = 100.*um; // Thickness of paint coating around crystal
 
@@ -121,28 +123,54 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   // BGO
   //
 
-  G4double bgoPhotonEnergy[] =
-    { 2.034*eV, 2.068*eV, 2.103*eV, 2.139*eV,
-      2.177*eV, 2.216*eV, 2.256*eV, 2.298*eV,
-      2.341*eV, 2.386*eV, 2.433*eV, 2.481*eV,
-      2.532*eV, 2.585*eV, 2.640*eV, 2.697*eV,
-      2.757*eV, 2.820*eV, 2.885*eV, 2.954*eV,
-      3.026*eV, 3.102*eV, 3.181*eV, 3.265*eV,
-      3.353*eV, 3.446*eV, 3.545*eV, 3.649*eV,
-      3.760*eV, 3.877*eV, 4.002*eV, 4.136*eV };
+  G4double bgoPhotonEnergy[] = {
+      1.000*eV, 1.030*eV, 1.060*eV, 1.090*eV, 1.120*eV, 1.150*eV, 1.180*eV, 1.210*eV,
+      1.240*eV, 1.270*eV, 1.300*eV, 1.330*eV, 1.360*eV, 1.390*eV, 1.420*eV, 1.450*eV,
+      1.480*eV, 1.510*eV, 1.540*eV, 1.570*eV, 1.600*eV, 1.630*eV, 1.660*eV, 1.690*eV,
+      1.720*eV, 1.750*eV, 1.780*eV, 1.810*eV, 1.840*eV, 1.870*eV, 1.900*eV, 1.930*eV,
+      1.960*eV, 1.990*eV, 2.020*eV, 2.050*eV, 2.080*eV, 2.110*eV, 2.140*eV, 2.170*eV,
+      2.200*eV, 2.230*eV, 2.260*eV, 2.290*eV, 2.320*eV, 2.350*eV, 2.380*eV, 2.410*eV,
+      2.440*eV, 2.470*eV, 2.500*eV, 2.530*eV, 2.560*eV, 2.590*eV, 2.620*eV, 2.650*eV,
+      2.680*eV, 2.710*eV, 2.740*eV, 2.770*eV, 2.800*eV, 2.830*eV, 2.860*eV, 2.890*eV,
+      2.920*eV, 2.950*eV, 2.980*eV, 3.010*eV, 3.040*eV, 3.070*eV, 3.100*eV, 3.130*eV,
+      3.160*eV, 3.190*eV, 3.220*eV, 3.250*eV, 3.280*eV, 3.310*eV, 3.340*eV, 3.370*eV,
+      3.400*eV, 3.430*eV, 3.460*eV, 3.490*eV, 3.520*eV, 3.550*eV, 3.580*eV, 3.610*eV,
+      3.640*eV, 3.670*eV, 3.700*eV, 3.730*eV, 3.760*eV, 3.790*eV, 3.820*eV, 3.850*eV,
+      3.880*eV, 3.910*eV, 3.940*eV, 3.970*eV, 4.000*eV };
 
   const G4int bgoNEntries = sizeof(bgoPhotonEnergy)/sizeof(G4double);
 
-  G4double bgoRefractiveIndex[] =
-    { 2.1030, 2.1056, 2.1084, 2.1114,
-      2.1145, 2.1179, 2.1214, 2.1251,
-      2.1291, 2.1334, 2.1379, 2.1428,
-      2.1480, 2.1537, 2.1597, 2.1662,
-      2.1732, 2.1809, 2.1891, 2.1982,
-      2.2081, 2.2190, 2.2308, 2.2440,
-      2.2586, 2.2748, 2.2932, 2.3136,
-      2.3370, 2.3635, 2.3940, 2.4297 };
+  G4double bgoRefractiveIndex[] = {
+      2.0468, 2.0479, 2.0489, 2.0500, 2.0512, 2.0523, 2.0535, 2.0548,
+      2.0560, 2.0573, 2.0587, 2.0600, 2.0614, 2.0629, 2.0643, 2.0659,
+      2.0674, 2.0690, 2.0706, 2.0723, 2.0740, 2.0757, 2.0775, 2.0793,
+      2.0811, 2.0830, 2.0850, 2.0869, 2.0890, 2.0910, 2.0931, 2.0952,
+      2.0974, 2.0997, 2.1019, 2.1042, 2.1066, 2.1090, 2.1115, 2.1140,
+      2.1165, 2.1191, 2.1217, 2.1244, 2.1272, 2.1300, 2.1328, 2.1357,
+      2.1386, 2.1416, 2.1447, 2.1478, 2.1510, 2.1542, 2.1575, 2.1608,
+      2.1642, 2.1677, 2.1712, 2.1748, 2.1784, 2.1821, 2.1859, 2.1898,
+      2.1937, 2.1977, 2.2017, 2.2059, 2.2101, 2.2143, 2.2187, 2.2231,
+      2.2276, 2.2322, 2.2369, 2.2416, 2.2465, 2.2514, 2.2564, 2.2615,
+      2.2667, 2.2720, 2.2774, 2.2828, 2.2884, 2.2941, 2.2999, 2.3058,
+      2.3118, 2.3179, 2.3242, 2.3305, 2.3370, 2.3436, 2.3503, 2.3572,
+      2.3642, 2.3713, 2.3786, 2.3860, 2.3935 };
   assert(sizeof(bgoRefractiveIndex) == sizeof(bgoPhotonEnergy));
+
+  G4double bgoScintFastComp[] = {
+      0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000,
+      0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000,
+      0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000,
+      0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0976,
+      0.3321, 0.4049, 0.4808, 0.5513, 0.6248, 0.6891, 0.7542, 0.8179,
+      0.8839, 0.9535, 1.0208, 1.0841, 1.1543, 1.2160, 1.2513, 1.2762,
+      1.3035, 1.3180, 1.3223, 1.3156, 1.2913, 1.2537, 1.2076, 1.1622,
+      1.1081, 1.0399, 0.9665, 0.8878, 0.8098, 0.7325, 0.6579, 0.5816,
+      0.5112, 0.4406, 0.3761, 0.3156, 0.2633, 0.2163, 0.1783, 0.1463,
+      0.1163, 0.0915, 0.0680, 0.0415, 0.0171, 0.0004, 0.0000, 0.0000,
+      0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000,
+      0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000,
+      0.0000, 0.0000, 0.0000, 0.0000, 0.0000 };
+  assert(sizeof(bgoScintFastComp) == sizeof(bgoPhotonEnergy));
 
   // Need to find the right table
   G4double bgoAbsorption[] = {
@@ -153,16 +181,26 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
       fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
       fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
       fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen
-  };
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
+      fBGOCrystal_abslen };
   assert(sizeof(bgoAbsorption) == sizeof(bgoPhotonEnergy));
-
-  G4double bgoScintFastComp[] = 
-    { 0.23, 0.29, 0.33, 0.39, 0.45, 0.52, 0.60, 0.67,
-      0.75, 0.84, 0.89, 0.95, 0.99, 1.00, 0.97, 0.93,
-      0.85, 0.74, 0.60, 0.48, 0.33, 0.22, 0.13, 0.04,
-      0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00 };
-  assert(sizeof(bgoScintFastComp) == sizeof(bgoPhotonEnergy));
   
   G4MaterialPropertiesTable* bgoMPT = new G4MaterialPropertiesTable();
   bgoMPT->AddProperty("RINDEX",bgoPhotonEnergy,bgoRefractiveIndex,bgoNEntries)->SetSpline(true);
@@ -181,15 +219,52 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   // PbF2
   //
 
-  G4double pbf2PhotonEnergy[] = { 1.550*eV, 1.771*eV, 2.066*eV, 2.480*eV, 3.100*eV, 4.133*eV };
+  G4double pbf2PhotonEnergy[] = {
+      1.600*eV, 1.630*eV, 1.660*eV, 1.690*eV, 1.720*eV, 1.750*eV, 1.780*eV, 1.810*eV,
+      1.840*eV, 1.870*eV, 1.900*eV, 1.930*eV, 1.960*eV, 1.990*eV, 2.020*eV, 2.050*eV,
+      2.080*eV, 2.110*eV, 2.140*eV, 2.170*eV, 2.200*eV, 2.230*eV, 2.260*eV, 2.290*eV,
+      2.320*eV, 2.350*eV, 2.380*eV, 2.410*eV, 2.440*eV, 2.470*eV, 2.500*eV, 2.530*eV,
+      2.560*eV, 2.590*eV, 2.620*eV, 2.650*eV, 2.680*eV, 2.710*eV, 2.740*eV, 2.770*eV,
+      2.800*eV, 2.830*eV, 2.860*eV, 2.890*eV, 2.920*eV, 2.950*eV, 2.980*eV, 3.010*eV,
+      3.040*eV, 3.070*eV, 3.100*eV, 3.130*eV, 3.160*eV, 3.190*eV, 3.220*eV, 3.250*eV,
+      3.280*eV, 3.310*eV, 3.340*eV, 3.370*eV, 3.400*eV, 3.430*eV, 3.460*eV, 3.490*eV,
+      3.520*eV, 3.550*eV, 3.580*eV, 3.610*eV, 3.640*eV, 3.670*eV, 3.700*eV, 3.730*eV,
+      3.760*eV, 3.790*eV, 3.820*eV, 3.850*eV, 3.880*eV, 3.910*eV, 3.940*eV, 3.970*eV,
+      4.000*eV };
   const G4int pbf2NEntries = sizeof(pbf2PhotonEnergy)/sizeof(G4double);
-  G4double pbf2RefractiveIndex[] = { 1.749, 1.755, 1.765, 1.782, 1.818, 1.937 };
+
+  G4double pbf2RefractiveIndex[] = {
+      1.7501, 1.7509, 1.7518, 1.7526, 1.7535, 1.7544, 1.7553, 1.7562,
+      1.7572, 1.7581, 1.7591, 1.7601, 1.7611, 1.7622, 1.7632, 1.7643,
+      1.7654, 1.7665, 1.7677, 1.7688, 1.7700, 1.7712, 1.7724, 1.7737,
+      1.7750, 1.7763, 1.7776, 1.7790, 1.7803, 1.7817, 1.7832, 1.7846,
+      1.7861, 1.7876, 1.7891, 1.7907, 1.7923, 1.7939, 1.7956, 1.7973,
+      1.7990, 1.8007, 1.8025, 1.8043, 1.8062, 1.8081, 1.8100, 1.8120,
+      1.8140, 1.8160, 1.8181, 1.8202, 1.8223, 1.8245, 1.8268, 1.8291,
+      1.8314, 1.8338, 1.8363, 1.8387, 1.8413, 1.8439, 1.8466, 1.8493,
+      1.8521, 1.8549, 1.8579, 1.8609, 1.8640, 1.8671, 1.8704, 1.8738,
+      1.8772, 1.8808, 1.8845, 1.8884, 1.8924, 1.8965, 1.9009, 1.9055,
+      1.9103 };
   assert(sizeof(pbf2RefractiveIndex) == sizeof(pbf2PhotonEnergy));
+
   G4double pbf2Absorption[] = {
-    fPbF2Crystal_abslen, fPbF2Crystal_abslen, fPbF2Crystal_abslen,
-    fPbF2Crystal_abslen, fPbF2Crystal_abslen, fPbF2Crystal_abslen
-  };
+      12.9837*cm, 12.9837*cm, 12.8912*cm, 12.8912*cm, 12.7098*cm, 12.6207*cm, 12.5328*cm, 12.4459*cm,
+      12.2753*cm, 12.1088*cm, 12.1088*cm, 12.0270*cm, 11.8663*cm, 11.7093*cm, 11.6322*cm, 11.5097*cm,
+      11.4804*cm, 11.3771*cm, 11.2593*cm, 11.1159*cm, 11.0454*cm, 10.9067*cm, 10.7710*cm, 10.7042*cm,
+      10.5728*cm, 10.4441*cm, 10.3807*cm, 10.2560*cm, 10.0736*cm,  9.9551*cm,  9.8389*cm,  9.7824*cm,
+       9.8967*cm,  9.7817*cm,  9.7244*cm,  9.5583*cm,  9.4498*cm,  9.3103*cm,  9.1874*cm,  9.0947*cm,
+       9.0318*cm,  8.8883*cm,  8.7921*cm,  8.6977*cm,  8.5592*cm,  8.4581*cm,  8.3363*cm,  8.2498*cm,
+       8.1228*cm,  8.0241*cm,  7.9180*cm,  7.8384*cm,  7.6834*cm,  7.6073*cm,  7.4727*cm,  7.3869*cm,
+       7.2560*cm,  7.1755*cm,  7.0415*cm,  6.9429*cm,  6.8464*cm,  6.7497*cm,  6.6358*cm,  6.5581*cm,
+       6.4268*cm,  6.3368*cm,  6.2396*cm,  6.1265*cm,  6.0453*cm,  5.9683*cm,  5.8448*cm,  5.7343*cm,
+       5.6621*cm,  5.5551*cm,  5.4748*cm,  5.3758*cm,  5.2813*cm,  5.1908*cm,  5.0837*cm,  5.0071*cm,
+       4.9085*cm };
   assert(sizeof(pbf2Absorption) == sizeof(pbf2PhotonEnergy));
+
+  // Apply overall scale to absorption length spectrum
+  for(G4int i=0; i<pbf2NEntries; i++) {
+    pbf2Absorption[i] *= fPbF2Crystal_abslen;
+  }
 
   G4MaterialPropertiesTable* pbf2MPT = new G4MaterialPropertiesTable();
   pbf2MPT->AddProperty("RINDEX",pbf2PhotonEnergy,pbf2RefractiveIndex,pbf2NEntries)->SetSpline(true);
@@ -268,7 +343,7 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   opBGOSurface->SetFinish(polished);
 
   const G4int bgo_num = 2;
-  G4double bgo_ephoton[bgo_num] = {2.034*eV, 4.136*eV};
+  G4double bgo_ephoton[bgo_num] = {1.*eV, 4.*eV};
   //G4double bgo_reflectivity[bgo_num] = {0.9, 0.9};
   G4double bgo_reflectivity[bgo_num] = {0.95, 0.95};
   G4double bgo_efficiency[bgo_num]   = {0.,0.};
@@ -294,8 +369,8 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   opPbF2Surface->SetFinish(polished);
 
   const G4int pbf2_num = 2;
-  G4double pbf2_ephoton[pbf2_num] = {2.034*eV, 4.136*eV};
-  G4double pbf2_reflectivity[pbf2_num] = {0.95, 0.95};
+  G4double pbf2_ephoton[pbf2_num] = {1.6*eV, 4.*eV};
+  G4double pbf2_reflectivity[pbf2_num] = {fPbF2Crystal_reflectivity,fPbF2Crystal_reflectivity};
   G4double pbf2_efficiency[pbf2_num]   = {0.,0.};
 
   G4MaterialPropertiesTable* pbf2ST = new G4MaterialPropertiesTable();
