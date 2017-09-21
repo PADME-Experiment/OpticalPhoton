@@ -54,6 +54,7 @@ private:
 
   OpNoviceDetectorConstruction* fDetectorConstruction;
 
+  G4int fPMTPhotonCounter;
   G4int fScintillationCounter;
   G4int fCerenkovCounter;
   G4int fEventNumber;

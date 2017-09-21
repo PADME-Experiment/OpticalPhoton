@@ -42,6 +42,7 @@
 #include "G4LogicalSkinSurface.hh"
 #include "G4OpticalSurface.hh"
 #include "G4Box.hh"
+#include "G4Tubs.hh"
 #include "G4LogicalVolume.hh"
 #include "G4ThreeVector.hh"
 #include "G4PVPlacement.hh"
@@ -55,7 +56,8 @@ OpNoviceDetectorConstruction::OpNoviceDetectorConstruction()
 
   fDetectorMessenger = new OpNoviceDetectorMessenger(this);
 
-  fDetectorMode = 0;
+  // Default: PbF2 crystal with Epoxy on readout face
+  fDetectorMode = 1;
 
   fWorld_x = fWorld_y = fWorld_z = 1.0*m;
 
@@ -66,6 +68,8 @@ OpNoviceDetectorConstruction::OpNoviceDetectorConstruction()
   fPbF2Crystal_abslen = 1.; // Default scale factor
   fPbF2Crystal_reflectivity = 0.95; // Default reflectivity factor
 
+  fEpoxyRadius = 1.27*cm; // 1/2 inch
+  fEpoxyThick = 1.*mm;
 
   fPaint = 100.*um; // Thickness of paint coating around crystal
 
@@ -107,6 +111,12 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   G4Material* PbF2 = new G4Material("PbF2",7.77*g/cm3,2);
   PbF2->AddElement(G4Element::GetElement("Pb"),84.5*perCent);
   PbF2->AddElement(G4Element::GetElement("F"), 15.5*perCent);
+
+  //Epoxy resin (CMS IN1999/026)
+  G4Material * Epoxy = new G4Material("Epoxy",1.3*g/cm3,3);
+  Epoxy->AddElement(G4Element::GetElement("C"),15);
+  Epoxy->AddElement(G4Element::GetElement("H"),44);
+  Epoxy->AddElement(G4Element::GetElement("O"),7);
 
   //Print all the materials defined.
   //G4cout << G4endl << "The elements defined are : " << G4endl << G4endl;
@@ -286,6 +296,20 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   PbF2->SetMaterialPropertiesTable(pbf2MPT);
 
   //
+  // Epoxy
+  //
+  const G4int epoxyNEntries = 2;
+  G4double epoxyPhotonEnergy[] = { 1.60*eV, 4.20*eV };
+  G4double epoxyRefractiveIndex[] = { 1.5, 1.5 };
+  G4MaterialPropertiesTable* epoxyMPT = new G4MaterialPropertiesTable();
+  epoxyMPT->AddProperty("RINDEX",epoxyPhotonEnergy,epoxyRefractiveIndex,epoxyNEntries)->SetSpline(true);
+
+  //G4cout << ">>> Epoxy G4MaterialPropertiesTable <<<" << G4endl;
+  //epoxyMPT->DumpTable();
+
+  Epoxy->SetMaterialPropertiesTable(epoxyMPT);
+
+  //
   // Air
   //
 
@@ -324,6 +348,10 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   G4Box* pbf2_crystal_box = new G4Box("PbF2_Crystal",0.5*fPbF2Crystal_x,0.5*fPbF2Crystal_y,0.5*fPbF2Crystal_z);
   G4LogicalVolume* pbf2_crystal_log = new G4LogicalVolume(pbf2_crystal_box,PbF2,"PbF2_Crystal",0,0,0);
 
+  // The Epoxy resin cylinder
+  G4Tubs* resin_tubs = new G4Tubs("Epoxy_Resin",0.,fEpoxyRadius,0.5*fEpoxyThick,0.*deg,360.*deg);
+  G4LogicalVolume* resin_log = new G4LogicalVolume(resin_tubs,Epoxy,"Epoxy_Resin",0,0,0);
+
   if ( fDetectorMode == 0 ) {
 
     G4cout << G4endl << ">>> Using BGO crystal with size " << fBGOCrystal_x/mm << "x" << fBGOCrystal_y/mm << "x" << fBGOCrystal_z/mm << " mm <<<" << G4endl << G4endl;
@@ -333,6 +361,7 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
 
     G4cout << G4endl << ">>> Using PbF2 crystal with size " << fPbF2Crystal_x/mm << "x" << fPbF2Crystal_y/mm << "x" << fPbF2Crystal_z/mm << " mm <<<" << G4endl << G4endl;
     G4VPhysicalVolume* crystal_phys = new G4PVPlacement(0,G4ThreeVector(),pbf2_crystal_log,"PbF2_Crystal",world_log,false,0);
+    G4VPhysicalVolume* epoxy_phys = new G4PVPlacement(0,G4ThreeVector(0.,0.,0.5*(fPbF2Crystal_z+fEpoxyThick)),resin_log,"Epoxy_Resin",world_log,false,0);
 
   }
 

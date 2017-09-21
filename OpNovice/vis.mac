@@ -2,15 +2,14 @@
 
 # Create the detector
 
-# Use BGO 21x21x230mm (default)
+# Use BGO 21x21x230mm
 #/OpNovice/detector/mode 0
 #/OpNovice/detector/bgo_crystal_abslen 300. cm
 
-# Use PbF2 30x30x140mm
+# Use PbF2 30x30x140mm (default)
 #/OpNovice/detector/mode 1
 #/OpNovice/detector/pbf2_crystal_length 14. cm
 #/OpNovice/detector/pbf2_crystal_abslen_scale 1.
-#/OpNovice/detector/pbf2_crystal_reflectivity 0.95
 
 /run/initialize
 
