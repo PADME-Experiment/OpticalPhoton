@@ -244,7 +244,11 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
       3.60*eV, 3.62*eV, 3.64*eV, 3.66*eV, 3.68*eV, 3.70*eV, 3.72*eV, 3.74*eV, 3.76*eV, 3.78*eV,
       3.80*eV, 3.82*eV, 3.84*eV, 3.86*eV, 3.88*eV, 3.90*eV, 3.92*eV, 3.94*eV, 3.96*eV, 3.98*eV,
       4.00*eV, 4.02*eV, 4.04*eV, 4.06*eV, 4.08*eV, 4.10*eV, 4.12*eV, 4.14*eV, 4.16*eV, 4.18*eV,
-      4.20*eV };
+      4.20*eV, 4.22*eV, 4.24*eV, 4.26*eV, 4.28*eV, 4.30*eV, 4.32*eV, 4.34*eV, 4.36*eV, 4.38*eV,
+      4.40*eV, 4.42*eV, 4.44*eV, 4.46*eV, 4.48*eV, 4.50*eV, 4.52*eV, 4.54*eV, 4.56*eV, 4.58*eV,
+      4.60*eV, 4.62*eV, 4.64*eV, 4.66*eV, 4.68*eV, 4.70*eV, 4.72*eV, 4.74*eV, 4.76*eV, 4.78*eV,
+      4.80*eV, 4.82*eV, 4.84*eV, 4.86*eV, 4.88*eV, 4.90*eV, 4.92*eV, 4.94*eV, 4.96*eV, 4.98*eV,
+      5.00*eV };
   const G4int pbf2NEntries = sizeof(pbf2PhotonEnergy)/sizeof(G4double);
 
   G4double pbf2RefractiveIndex[] = {
@@ -261,7 +265,11 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
       1.8599, 1.8619, 1.8640, 1.8661, 1.8682, 1.8704, 1.8726, 1.8749, 1.8772, 1.8796,
       1.8820, 1.8845, 1.8871, 1.8897, 1.8924, 1.8951, 1.8979, 1.9009, 1.9039, 1.9071,
       1.9103, 1.9137, 1.9173, 1.9210, 1.9249, 1.9291, 1.9336, 1.9384, 1.9436, 1.9494,
-      1.9558 };
+      1.9558, 1.9630, 1.9714, 1.9814, 1.9936, 2.0094, 2.0311, 2.0634, 2.1194, 2.2452,
+      2.8604, 0.7825, 1.6161, 1.7530, 1.8120, 1.8459, 1.8685, 1.8851, 1.8982, 1.9089,
+      1.9181, 1.9263, 1.9336, 1.9403, 1.9466, 1.9526, 1.9583, 1.9638, 1.9692, 1.9744,
+      1.9795, 1.9846, 1.9896, 1.9945, 1.9995, 2.0044, 2.0094, 2.0143, 2.0193, 2.0243,
+      2.0293 };
   assert(sizeof(pbf2RefractiveIndex) == sizeof(pbf2PhotonEnergy));
 
   G4double pbf2Absorption[] = {
@@ -278,7 +286,11 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
        6.15*cm,  6.12*cm,  6.05*cm,  5.99*cm,  5.92*cm,  5.84*cm,  5.77*cm,  5.71*cm,  5.66*cm,  5.60*cm,
        5.54*cm,  5.47*cm,  5.39*cm,  5.34*cm,  5.28*cm,  5.23*cm,  5.15*cm,  5.08*cm,  5.03*cm,  5.01*cm,
        4.91*cm,  4.87*cm,  4.81*cm,  4.74*cm,  4.68*cm,  4.62*cm,  4.56*cm,  4.49*cm,  4.42*cm,  4.37*cm,
-       4.29*cm };
+       4.29*cm,  4.26*cm,  4.18*cm,  4.10*cm,  4.04*cm,  3.97*cm,  3.91*cm,  3.84*cm,  3.74*cm,  3.68*cm,
+       3.61*cm,  3.52*cm,  3.44*cm,  3.37*cm,  3.30*cm,  3.19*cm,  3.09*cm,  3.02*cm,  2.93*cm,  2.81*cm,
+       2.75*cm,  2.60*cm,  2.47*cm,  2.38*cm,  2.26*cm,  2.13*cm,  2.04*cm,  1.83*cm,  1.69*cm,  1.60*cm,
+       1.42*cm,  1.27*cm,  1.18*cm,  1.02*cm,  0.88*cm,  0.81*cm,  0.74*cm,  0.64*cm,  0.50*cm,  0.35*cm,
+       0.20*cm };
   assert(sizeof(pbf2Absorption) == sizeof(pbf2PhotonEnergy));
 
   // Apply overall scale to absorption length spectrum

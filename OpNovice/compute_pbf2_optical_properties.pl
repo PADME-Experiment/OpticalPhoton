@@ -360,10 +360,9 @@ $nwl = @wl;
       79.3692, 79.3692, 79.5006, 79.6321, 79.7635, 79.8949 );
 
 # Define energy spectrum of interest
-$emin = 1.6;
-#$emax = 4.;
-$emax = 4.2;
-$nbin = 130;
+$emin = 1.6; # 775 nm
+$emax = 5.0; # 250nm
+$nbin = 170;
 $de = ($emax-$emin)/$nbin;
 #print "$emin $emax $nbin $de\n";
 @gammaE = ();
