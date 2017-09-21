@@ -61,6 +61,7 @@ public:
   void SetPbF2CrystalReflectivity(G4double r) { fPbF2Crystal_reflectivity = r; }
 
   G4double GetCrystalLength();
+  G4double GetPMTRadius() { return fEpoxyRadius; };
 
 private:
 
@@ -84,6 +85,9 @@ private:
   
   G4double fPbF2Crystal_abslen; // Scale factor for absorption length spectrum
   G4double fPbF2Crystal_reflectivity; // Reflectivity factor
+
+  G4double fEpoxyRadius;
+  G4double fEpoxyThick;
 
   G4double fPaint;
 

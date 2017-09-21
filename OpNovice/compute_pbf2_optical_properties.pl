@@ -360,8 +360,11 @@ $nwl = @wl;
       79.3692, 79.3692, 79.5006, 79.6321, 79.7635, 79.8949 );
 
 # Define energy spectrum of interest
-$emin = 1.6; $emax = 4.;
-$nbin = 80; $de = ($emax-$emin)/$nbin;
+$emin = 1.6;
+#$emax = 4.;
+$emax = 4.2;
+$nbin = 130;
+$de = ($emax-$emin)/$nbin;
 #print "$emin $emax $nbin $de\n";
 @gammaE = ();
 for ($i=0;$i<$nbin+1;$i++) {
@@ -403,15 +406,15 @@ for ($i=0;$i<$nbin+1;$i++) {
 
 printf "\n  G4double pbf2PhotonEnergy[] = {"; 
 for($i=0;$i<=$nbin;$i++){
-    if ($i%8 == 0) { printf "\n      "; }
-    printf "%5.3f*eV",$gammaE[$i];
+    if ($i%10 == 0) { printf "\n      "; }
+    printf "%4.2f*eV",$gammaE[$i];
     if ($i != $nbin) { printf ", "; }
 }
 printf " };\n";
 
 printf "\n  G4double pbf2RefractiveIndex[] = {"; 
 for($i=0;$i<=$nbin;$i++){
-    if ($i%8 == 0) { printf "\n      "; }
+    if ($i%10 == 0) { printf "\n      "; }
     printf "%6.4f",$ref_idx[$i];
     if ($i != $nbin) { printf ", "; }
 }
@@ -419,8 +422,8 @@ printf " };\n";
 
 printf "\n  G4double pbf2Absorption[] = {"; 
 for($i=0;$i<=$nbin;$i++){
-    if ($i%8 == 0) { printf "\n      "; }
-    printf "%7.4f*cm",$abs_len[$i];
+    if ($i%10 == 0) { printf "\n      "; }
+    printf "%5.2f*cm",$abs_len[$i];
     if ($i != $nbin) { printf ", "; }
 }
 printf " };\n";

@@ -45,6 +45,7 @@ OpNoviceSteppingAction::OpNoviceSteppingAction()
 : G4UserSteppingAction()
 { 
 
+  fPMTPhotonCounter = 0;
   fScintillationCounter = 0;
   fCerenkovCounter      = 0;
   fEventNumber = -1;
@@ -66,6 +67,7 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
 
   if (eventNumber != fEventNumber) {
     fEventNumber = eventNumber;
+    fPMTPhotonCounter = 0;
     fScintillationCounter = 0;
     fCerenkovCounter = 0;
   }
@@ -75,13 +77,44 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
   G4String ParticleName = track->GetDynamicParticle()->GetParticleDefinition()->GetParticleName();
 
   if (ParticleName == "opticalphoton") {
-    G4ThreeVector pre = step->GetPreStepPoint()->GetPosition();
-    G4ThreeVector post = step->GetPostStepPoint()->GetPosition();
-    if (post.z() == 0.5*fDetectorConstruction->GetCrystalLength()) {
-      printf("*** Killing photon on PMT surface at P = (%.3f,%.3f,%.3f) mm T = %.3f ns E = %.3f eV ***\n",post.x()/mm,post.y()/mm,post.z()/mm,step->GetPostStepPoint()->GetGlobalTime()/ns,track->GetTotalEnergy()/eV);
-      track->SetTrackStatus(fStopAndKill);
+
+    G4ThreeVector p = step->GetPostStepPoint()->GetPosition();
+
+    // Check if step ended on the crystal's back surface
+    if ( p.z() == 0.5*fDetectorConstruction->GetCrystalLength() ) {
+
+      // Check if step ended inside PMT radius
+      G4double g_r = sqrt(p.x()*p.x()+p.y()*p.y());
+      if ( g_r < fDetectorConstruction->GetPMTRadius() ) {
+
+	// This is the momentum after the boundary effect
+	// If the Z component is >0 the photon was transmitted inside the Epoxy
+	G4ThreeVector g_md = track->GetMomentumDirection();
+	//printf("Momentum direction %.3f %.3f %.3f\n",g_md.x(),g_md.y(),g_md.z());
+	if (g_md.z()>0.) {
+
+	  // Count photon
+	  fPMTPhotonCounter++;
+
+	  // Show properties of photon entering EPoxy
+	  G4double g_x = p.x()/mm;
+	  G4double g_y = p.y()/mm;
+	  G4double g_z = p.z()/mm;
+
+	  G4double g_t = step->GetPostStepPoint()->GetGlobalTime()/ns;
+	  G4double g_e = track->GetTotalEnergy()/eV;
+
+	  printf("*** Killing Photon Event %d N %d P = %.3f %.3f %.3f mm T = %.3f ns E = %.3f eV ***\n",
+		 fEventNumber,fPMTPhotonCounter,g_x,g_y,g_z,g_t,g_e);
+
+	  // Kill the photon
+	  track->SetTrackStatus(fStopAndKill);
+
+	}
+      }
     }
     return;
+
   }
 
   const std::vector<const G4Track*>* secondaries = step->GetSecondaryInCurrentStep();
