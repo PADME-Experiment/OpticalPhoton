@@ -229,7 +229,6 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   // PbF2
   //
 
-
   G4double pbf2PhotonEnergy[] = {
       1.60*eV, 1.62*eV, 1.64*eV, 1.66*eV, 1.68*eV, 1.70*eV, 1.72*eV, 1.74*eV, 1.76*eV, 1.78*eV,
       1.80*eV, 1.82*eV, 1.84*eV, 1.86*eV, 1.88*eV, 1.90*eV, 1.92*eV, 1.94*eV, 1.96*eV, 1.98*eV,
@@ -308,11 +307,11 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   PbF2->SetMaterialPropertiesTable(pbf2MPT);
 
   //
-  // Epoxy
+  // Epoxy EJ-500
   //
   const G4int epoxyNEntries = 2;
   G4double epoxyPhotonEnergy[] = { 1.60*eV, 4.20*eV };
-  G4double epoxyRefractiveIndex[] = { 1.5, 1.5 };
+  G4double epoxyRefractiveIndex[] = { 1.57, 1.57 };
   G4MaterialPropertiesTable* epoxyMPT = new G4MaterialPropertiesTable();
   epoxyMPT->AddProperty("RINDEX",epoxyPhotonEnergy,epoxyRefractiveIndex,epoxyNEntries)->SetSpline(true);
 
