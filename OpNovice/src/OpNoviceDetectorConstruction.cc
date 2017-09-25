@@ -73,6 +73,8 @@ OpNoviceDetectorConstruction::OpNoviceDetectorConstruction()
 
   fPaint = 100.*um; // Thickness of paint coating around crystal
 
+  fCrystalVolume = 0;
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -366,13 +368,18 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   if ( fDetectorMode == 0 ) {
 
     G4cout << G4endl << ">>> Using BGO crystal with size " << fBGOCrystal_x/mm << "x" << fBGOCrystal_y/mm << "x" << fBGOCrystal_z/mm << " mm <<<" << G4endl << G4endl;
-    G4VPhysicalVolume* crystal_phys = new G4PVPlacement(0,G4ThreeVector(),bgo_crystal_log,"BGO_Crystal",world_log,false,0);
+    //G4VPhysicalVolume* crystal_phys = 
+    new G4PVPlacement(0,G4ThreeVector(),bgo_crystal_log,"BGO_Crystal",world_log,false,0);
+    fCrystalVolume = bgo_crystal_log;
 
   } else {
 
     G4cout << G4endl << ">>> Using PbF2 crystal with size " << fPbF2Crystal_x/mm << "x" << fPbF2Crystal_y/mm << "x" << fPbF2Crystal_z/mm << " mm <<<" << G4endl << G4endl;
-    G4VPhysicalVolume* crystal_phys = new G4PVPlacement(0,G4ThreeVector(),pbf2_crystal_log,"PbF2_Crystal",world_log,false,0);
-    G4VPhysicalVolume* epoxy_phys = new G4PVPlacement(0,G4ThreeVector(0.,0.,0.5*(fPbF2Crystal_z+fEpoxyThick)),resin_log,"Epoxy_Resin",world_log,false,0);
+    //G4VPhysicalVolume* crystal_phys =
+    new G4PVPlacement(0,G4ThreeVector(),pbf2_crystal_log,"PbF2_Crystal",world_log,false,0);
+    //G4VPhysicalVolume* epoxy_phys =
+    new G4PVPlacement(0,G4ThreeVector(0.,0.,0.5*(fPbF2Crystal_z+fEpoxyThick)),resin_log,"Epoxy_Resin",world_log,false,0);
+    fCrystalVolume = pbf2_crystal_log;
 
   }
 
@@ -407,7 +414,8 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
 
   opBGOSurface->SetMaterialPropertiesTable(bgoST);
 
-  G4LogicalSkinSurface* bgoSurface = new G4LogicalSkinSurface("BGOSurface",bgo_crystal_log,opBGOSurface);
+  //G4LogicalSkinSurface* bgoSurface = 
+  new G4LogicalSkinSurface("BGOSurface",bgo_crystal_log,opBGOSurface);
 
   //
   // PbF2

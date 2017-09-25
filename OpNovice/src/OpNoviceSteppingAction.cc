@@ -29,6 +29,8 @@
 /// \brief Implementation of the OpNoviceSteppingAction class
 
 #include "OpNoviceSteppingAction.hh"
+
+#include "OpNoviceEventAction.hh"
 #include "OpNoviceDetectorConstruction.hh"
 
 #include "G4Step.hh"
@@ -41,16 +43,15 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-OpNoviceSteppingAction::OpNoviceSteppingAction()
-: G4UserSteppingAction()
+OpNoviceSteppingAction::OpNoviceSteppingAction(OpNoviceEventAction* eventAction)
+  : G4UserSteppingAction(),
+    fEventAction(eventAction)
 { 
 
   fPMTPhotonCounter = 0;
-  fScintillationCounter = 0;
-  fCerenkovCounter      = 0;
   fEventNumber = -1;
 
-  fDetectorConstruction= (OpNoviceDetectorConstruction*)G4RunManager::GetRunManager()->GetUserDetectorConstruction();
+  fDetectorConstruction = (OpNoviceDetectorConstruction*)G4RunManager::GetRunManager()->GetUserDetectorConstruction();
 
 }
 
@@ -68,8 +69,6 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
   if (eventNumber != fEventNumber) {
     fEventNumber = eventNumber;
     fPMTPhotonCounter = 0;
-    fScintillationCounter = 0;
-    fCerenkovCounter = 0;
   }
 
   G4Track* track = step->GetTrack();
@@ -95,6 +94,7 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
 
 	  // Count photon
 	  fPMTPhotonCounter++;
+	  fEventAction->CountPMTPhoton();
 
 	  // Show properties of photon entering EPoxy
 	  G4double g_x = p.x()/mm;
@@ -115,21 +115,30 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
     }
     return;
 
+  } else {
+
+    // Compute total energy released inside the crystal
+    if ( step->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetLogicalVolume() == fDetectorConstruction->GetCrystalVolume() ) {
+      fEventAction->AddEdep(step->GetTotalEnergyDeposit());
+      //if (step->GetNonIonizingEnergyDeposit() != 0.) printf("WARNING - Non ionizing energy deposit of %f keV\n",
+      //							    step->GetNonIonizingEnergyDeposit()/keV);
+    }
+
   }
 
+  // Count total number of optical photons produced by scintillation and Cerenkov effect
   const std::vector<const G4Track*>* secondaries = step->GetSecondaryInCurrentStep();
   if (secondaries->size()>0) {
     for(unsigned int i=0; i<secondaries->size(); ++i) {
       if (secondaries->at(i)->GetParentID()>0) {
 	if(secondaries->at(i)->GetDynamicParticle()->GetParticleDefinition() == G4OpticalPhoton::OpticalPhotonDefinition()){
-	  if (secondaries->at(i)->GetCreatorProcess()->GetProcessName() == "Scintillation")
-	    fScintillationCounter++;
-	  if (secondaries->at(i)->GetCreatorProcess()->GetProcessName() == "Cerenkov")
-	    fCerenkovCounter++;
+	  if (secondaries->at(i)->GetCreatorProcess()->GetProcessName() == "Scintillation") fEventAction->CountScintillationPhoton();
+	  if (secondaries->at(i)->GetCreatorProcess()->GetProcessName() == "Cerenkov") fEventAction->CountCerenkovPhoton();
 	}
       }
     }
   }
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

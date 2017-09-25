@@ -23,45 +23,48 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-// $Id: OpNoviceSteppingAction.hh 69469 2013-05-05 21:42:35Z ihrivnac $
+// $Id: OpNoviceEventAction.hh 93886 2015-11-03 08:28:26Z gcosmo $
 //
-/// \file OpNoviceSteppingAction.hh
-/// \brief Definition of the OpNoviceSteppingAction class
+/// \file OpNoviceEventAction.hh
+/// \brief Definition of the OpNoviceEventAction class
 
-#ifndef OpNoviceSteppingAction_h
-#define OpNoviceSteppingAction_h 1
+#ifndef OpNoviceEventAction_h
+#define OpNoviceEventAction_h 1
 
-#include "G4UserSteppingAction.hh"
+#include "G4UserEventAction.hh"
 #include "globals.hh"
 
-class OpNoviceDetectorConstruction;
-class OpNoviceEventAction;
+class OpNoviceRunAction;
 
-/// Stepping action class
-/// 
+/// Event action class
+///
 
-class OpNoviceSteppingAction : public G4UserSteppingAction
+class OpNoviceEventAction : public G4UserEventAction
 {
-
 public:
+  OpNoviceEventAction(OpNoviceRunAction*);
+  virtual ~OpNoviceEventAction();
 
-  OpNoviceSteppingAction(OpNoviceEventAction*);
-  virtual ~OpNoviceSteppingAction();
+  virtual void BeginOfEventAction(const G4Event*);
+  virtual void EndOfEventAction(const G4Event*);
 
-  // method from the base class
-  virtual void UserSteppingAction(const G4Step*);
+  void AddEdep(G4double edep) { fEdep += edep; }
+
+  void CountPMTPhoton() { fPMTPhotonCounter++; }
+  void CountScintillationPhoton() { fScinitillationCounter++; }
+  void CountCerenkovPhoton() { fCerenkovCounter++; }
 
 private:
-
-  OpNoviceDetectorConstruction* fDetectorConstruction;
-
-  OpNoviceEventAction* fEventAction;
-
+  OpNoviceRunAction* fRunAction;
+  G4double fEdep;
   G4int fPMTPhotonCounter;
-  G4int fEventNumber;
-
+  G4int fScinitillationCounter;
+  G4int fCerenkovCounter;
+  
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
+
+    

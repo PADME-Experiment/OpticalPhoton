@@ -23,80 +23,55 @@
 // * acceptance of all terms of the Geant4 Software license.          *
 // ********************************************************************
 //
-/// \file OpNovice/include/OpNoviceDetectorConstruction.hh
-/// \brief Definition of the OpNoviceDetectorConstruction class
+// $Id: OpNoviceEventAction.cc 93886 2015-11-03 08:28:26Z gcosmo $
 //
-//
-//
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+/// \file OpNoviceEventAction.cc
+/// \brief Implementation of the OpNoviceEventAction class
 
-#ifndef OpNoviceDetectorConstruction_h
-#define OpNoviceDetectorConstruction_h 1
+#include "OpNoviceEventAction.hh"
+#include "OpNoviceRunAction.hh"
 
-#include "globals.hh"
-#include "G4VUserDetectorConstruction.hh"
-
-class OpNoviceDetectorMessenger;
+#include "G4Event.hh"
+#include "G4RunManager.hh"
+#include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-class OpNoviceDetectorConstruction : public G4VUserDetectorConstruction
+OpNoviceEventAction::OpNoviceEventAction(OpNoviceRunAction* runAction)
+: G4UserEventAction(),
+  fRunAction(runAction)
 {
-
-public:
-
-  OpNoviceDetectorConstruction();
-  virtual ~OpNoviceDetectorConstruction();
-
-public:
-
-  virtual G4VPhysicalVolume* Construct();
-  void SetDetectorMode(G4int m) { fDetectorMode = m; }
-
-  void SetBGOCrystalAbsLength(G4double l) { fBGOCrystal_abslen = l; }
-
-  void SetPbF2CrystalLength(G4double l) { fPbF2Crystal_z = l; }
-  void SetPbF2CrystalAbsLength(G4double l) { fPbF2Crystal_abslen = l; }
-  void SetPbF2CrystalReflectivity(G4double r) { fPbF2Crystal_reflectivity = r; }
-
-  G4double GetCrystalLength();
-  G4double GetPMTRadius() { return fEpoxyRadius; };
-
-  G4LogicalVolume* GetCrystalVolume() { return fCrystalVolume; }
-
-private:
-
-  OpNoviceDetectorMessenger* fDetectorMessenger;
-
-  G4LogicalVolume* fCrystalVolume;
-
-  G4int fDetectorMode;
-
-  G4double fWorld_x;
-  G4double fWorld_y;
-  G4double fWorld_z;
-
-  G4double fBGOCrystal_x;
-  G4double fBGOCrystal_y;
-  G4double fBGOCrystal_z;
-
-  G4double fBGOCrystal_abslen;
-
-  G4double fPbF2Crystal_x;
-  G4double fPbF2Crystal_y;
-  G4double fPbF2Crystal_z;
-  
-  G4double fPbF2Crystal_abslen; // Scale factor for absorption length spectrum
-  G4double fPbF2Crystal_reflectivity; // Reflectivity factor
-
-  G4double fEpoxyRadius;
-  G4double fEpoxyThick;
-
-  G4double fPaint;
-
-};
+  fEdep = 0.;
+  fPMTPhotonCounter = 0;
+  fScinitillationCounter = 0;
+  fCerenkovCounter = 0;
+} 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-#endif /*OpNoviceDetectorConstruction_h*/
+OpNoviceEventAction::~OpNoviceEventAction()
+{}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void OpNoviceEventAction::BeginOfEventAction(const G4Event* event)
+{    
+  fEdep = 0.;
+  fPMTPhotonCounter = 0;
+  fScinitillationCounter = 0;
+  fCerenkovCounter = 0;
+  printf("OpNoviceEventAction - Event %d Begin\n",event->GetEventID());
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+void OpNoviceEventAction::EndOfEventAction(const G4Event* event)
+{   
+  printf("OpNoviceEventAction - Event %d End\n",event->GetEventID());
+  printf("OpNoviceEventAction - Edep %f MeV NPMT %d NScint %d NCerenkov %d\n",
+	 fEdep/MeV,fPMTPhotonCounter,fScinitillationCounter,fCerenkovCounter);
+  // accumulate statistics in run action
+  //fRunAction->AddEdep(fEdep);
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

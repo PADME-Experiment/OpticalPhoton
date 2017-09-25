@@ -31,6 +31,7 @@
 #include "OpNoviceActionInitialization.hh"
 #include "OpNovicePrimaryGeneratorAction.hh"
 #include "OpNoviceRunAction.hh"
+#include "OpNoviceEventAction.hh"
 #include "OpNoviceSteppingAction.hh"
 #include "OpNoviceStackingAction.hh"
 #include "OpNoviceSteppingVerbose.hh"
@@ -57,10 +58,19 @@ void OpNoviceActionInitialization::BuildForMaster() const
 
 void OpNoviceActionInitialization::Build() const
 {
+
   SetUserAction(new OpNovicePrimaryGeneratorAction());
-  SetUserAction(new OpNoviceRunAction());
-  SetUserAction(new OpNoviceSteppingAction());
+
+  OpNoviceRunAction* runAction = new OpNoviceRunAction;
+  SetUserAction(runAction);
+
+  OpNoviceEventAction* eventAction = new OpNoviceEventAction(runAction);
+  SetUserAction(eventAction);
+
+  SetUserAction(new OpNoviceSteppingAction(eventAction));
+
   SetUserAction(new OpNoviceStackingAction());
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
