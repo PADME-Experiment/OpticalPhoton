@@ -43,15 +43,15 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-OpNoviceSteppingAction::OpNoviceSteppingAction(OpNoviceEventAction* eventAction)
-  : G4UserSteppingAction(),
-    fEventAction(eventAction)
-{ 
+OpNoviceSteppingAction::OpNoviceSteppingAction() : G4UserSteppingAction()
+{
 
   fPMTPhotonCounter = 0;
   fEventNumber = -1;
 
   fDetectorConstruction = (OpNoviceDetectorConstruction*)G4RunManager::GetRunManager()->GetUserDetectorConstruction();
+
+  fEventAction = (OpNoviceEventAction*)G4RunManager::GetRunManager()->GetUserEventAction();
 
 }
 

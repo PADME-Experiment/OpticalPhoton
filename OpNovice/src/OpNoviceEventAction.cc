@@ -29,6 +29,7 @@
 /// \brief Implementation of the OpNoviceEventAction class
 
 #include "OpNoviceEventAction.hh"
+
 #include "OpNoviceRunAction.hh"
 
 #include "G4Event.hh"
@@ -37,14 +38,16 @@
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
-OpNoviceEventAction::OpNoviceEventAction(OpNoviceRunAction* runAction)
-: G4UserEventAction(),
-  fRunAction(runAction)
+OpNoviceEventAction::OpNoviceEventAction() : G4UserEventAction()
 {
+
   fEdep = 0.;
   fPMTPhotonCounter = 0;
   fScinitillationCounter = 0;
   fCerenkovCounter = 0;
+
+  fRunAction = (OpNoviceRunAction*)G4RunManager::GetRunManager()->GetUserRunAction();
+
 } 
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

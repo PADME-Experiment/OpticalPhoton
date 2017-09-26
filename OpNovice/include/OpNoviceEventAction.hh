@@ -42,7 +42,8 @@ class OpNoviceRunAction;
 class OpNoviceEventAction : public G4UserEventAction
 {
 public:
-  OpNoviceEventAction(OpNoviceRunAction*);
+
+  OpNoviceEventAction();
   virtual ~OpNoviceEventAction();
 
   virtual void BeginOfEventAction(const G4Event*);
@@ -55,7 +56,9 @@ public:
   void CountCerenkovPhoton() { fCerenkovCounter++; }
 
 private:
+
   OpNoviceRunAction* fRunAction;
+
   G4double fEdep;
   G4int fPMTPhotonCounter;
   G4int fScinitillationCounter;

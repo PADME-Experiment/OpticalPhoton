@@ -45,7 +45,7 @@ class OpNoviceSteppingAction : public G4UserSteppingAction
 
 public:
 
-  OpNoviceSteppingAction(OpNoviceEventAction*);
+  OpNoviceSteppingAction();
   virtual ~OpNoviceSteppingAction();
 
   // method from the base class

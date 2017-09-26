@@ -61,13 +61,11 @@ void OpNoviceActionInitialization::Build() const
 
   SetUserAction(new OpNovicePrimaryGeneratorAction());
 
-  OpNoviceRunAction* runAction = new OpNoviceRunAction;
-  SetUserAction(runAction);
+  SetUserAction(new OpNoviceRunAction());
 
-  OpNoviceEventAction* eventAction = new OpNoviceEventAction(runAction);
-  SetUserAction(eventAction);
+  SetUserAction(new OpNoviceEventAction()); // Depends on RunAction
 
-  SetUserAction(new OpNoviceSteppingAction(eventAction));
+  SetUserAction(new OpNoviceSteppingAction()); // Depends on EventAction
 
   SetUserAction(new OpNoviceStackingAction());
 
