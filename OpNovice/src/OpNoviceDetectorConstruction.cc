@@ -312,7 +312,7 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   // Epoxy EJ-500
   //
   const G4int epoxyNEntries = 2;
-  G4double epoxyPhotonEnergy[] = { 1.60*eV, 4.20*eV };
+  G4double epoxyPhotonEnergy[] = { 1.60*eV, 5.00*eV };
   G4double epoxyRefractiveIndex[] = { 1.57, 1.57 };
   G4MaterialPropertiesTable* epoxyMPT = new G4MaterialPropertiesTable();
   epoxyMPT->AddProperty("RINDEX",epoxyPhotonEnergy,epoxyRefractiveIndex,epoxyNEntries)->SetSpline(true);
@@ -325,8 +325,7 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
   //
   // Air
   //
-
-  G4double airPhotonEnergy[] = { 1.0*eV, 4.2*eV };
+  G4double airPhotonEnergy[] = { 1.0*eV, 5.0*eV };
   const G4int airNEntries = sizeof(airPhotonEnergy)/sizeof(G4double);
   G4double airRefractiveIndex[] = { 1.00, 1.00 };
   G4MaterialPropertiesTable* airMPT = new G4MaterialPropertiesTable();

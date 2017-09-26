@@ -44,16 +44,37 @@ class G4Run;
 
 class OpNoviceRunAction : public G4UserRunAction
 {
-  public:
-    OpNoviceRunAction();
-    virtual ~OpNoviceRunAction();
+public:
 
-  public:
-    virtual void BeginOfRunAction(const G4Run* aRun);
-    virtual void EndOfRunAction(const G4Run* aRun);
+  OpNoviceRunAction();
+  virtual ~OpNoviceRunAction();
 
-  private:
-    G4Timer* fTimer;
+public:
+
+  virtual void BeginOfRunAction(const G4Run* aRun);
+  virtual void EndOfRunAction(const G4Run* aRun);
+
+  void AddEdep(G4double e)   { fSumEdep += e; fSumEdep2 += e*e;      }
+  void AddNPMT(G4int n)      { fSumNPMT += (G4double)n; fSumNPMT2 += (G4double)n*(G4double)n;      }
+  void AddNScint(G4int n)    { fSumNSci += (G4double)n; fSumNSci2 += (G4double)n*(G4double)n;    }
+  void AddNCerenkov(G4int n) { fSumNCer += (G4double)n; fSumNCer2 += (G4double)n*(G4double)n; }
+
+private:
+
+  G4double fSumEdep;
+  G4double fSumEdep2;
+
+  G4double fSumNPMT;
+  G4double fSumNPMT2;
+
+  G4double fSumNSci;
+  G4double fSumNSci2;
+
+  G4double fSumNCer;
+  G4double fSumNCer2;
+
+  G4Timer* fTimer;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

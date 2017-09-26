@@ -67,7 +67,7 @@ void OpNoviceActionInitialization::Build() const
 
   SetUserAction(new OpNoviceSteppingAction()); // Depends on EventAction
 
-  SetUserAction(new OpNoviceStackingAction());
+  //SetUserAction(new OpNoviceStackingAction());
 
 }
 
