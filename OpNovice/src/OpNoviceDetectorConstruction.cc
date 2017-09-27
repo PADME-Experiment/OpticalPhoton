@@ -265,12 +265,12 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
       1.8413, 1.8430, 1.8448, 1.8466, 1.8484, 1.8502, 1.8521, 1.8540, 1.8559, 1.8579,
       1.8599, 1.8619, 1.8640, 1.8661, 1.8682, 1.8704, 1.8726, 1.8749, 1.8772, 1.8796,
       1.8820, 1.8845, 1.8871, 1.8897, 1.8924, 1.8951, 1.8979, 1.9009, 1.9039, 1.9071,
-      1.9103, 1.9137, 1.9173, 1.9210, 1.9249, 1.9291, 1.9336, 1.9384, 1.9436, 1.9494,
-      1.9558, 1.9630, 1.9714, 1.9814, 1.9936, 2.0094, 2.0311, 2.0634, 2.1194, 2.2452,
-      2.8604, 0.7825, 1.6161, 1.7530, 1.8120, 1.8459, 1.8685, 1.8851, 1.8982, 1.9089,
-      1.9181, 1.9263, 1.9336, 1.9403, 1.9466, 1.9526, 1.9583, 1.9638, 1.9692, 1.9744,
-      1.9795, 1.9846, 1.9896, 1.9945, 1.9995, 2.0044, 2.0094, 2.0143, 2.0193, 2.0243,
-      2.0293 };
+      1.9103, 2.0510, 2.0520, 2.0530, 2.0540, 2.0550, 2.0560, 2.0570, 2.0580, 2.0590,
+      2.0600, 2.0620, 2.0640, 2.0660, 2.0680, 2.0700, 2.0720, 2.0740, 2.0760, 2.0780,
+      2.0800, 2.0820, 2.0840, 2.0860, 2.0880, 2.0900, 2.0920, 2.0940, 2.0960, 2.0980,
+      2.1000, 2.1030, 2.1060, 2.1090, 2.1120, 2.1150, 2.1180, 2.1210, 2.1240, 2.1270,
+      2.1300, 2.1340, 2.1380, 2.1420, 2.1460, 2.1500, 2.1540, 2.1580, 2.1620, 2.1660,
+      2.1700 };
   assert(sizeof(pbf2RefractiveIndex) == sizeof(pbf2PhotonEnergy));
 
   G4double pbf2Absorption[] = {
@@ -290,8 +290,8 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
        4.29*cm,  4.26*cm,  4.18*cm,  4.10*cm,  4.04*cm,  3.97*cm,  3.91*cm,  3.84*cm,  3.74*cm,  3.68*cm,
        3.61*cm,  3.52*cm,  3.44*cm,  3.37*cm,  3.30*cm,  3.19*cm,  3.09*cm,  3.02*cm,  2.93*cm,  2.81*cm,
        2.75*cm,  2.60*cm,  2.47*cm,  2.38*cm,  2.26*cm,  2.13*cm,  2.04*cm,  1.83*cm,  1.69*cm,  1.60*cm,
-       1.42*cm,  1.27*cm,  1.18*cm,  1.02*cm,  0.88*cm,  0.81*cm,  0.74*cm,  0.64*cm,  0.50*cm,  0.35*cm,
-       0.20*cm };
+       1.42*cm,  1.27*cm,  1.18*cm,  1.02*cm,  0.88*cm,  0.81*cm,  0.74*cm,  0.64*cm,  0.54*cm,  0.44*cm,
+       0.34*cm };
   assert(sizeof(pbf2Absorption) == sizeof(pbf2PhotonEnergy));
 
   // Apply overall scale to absorption length spectrum
@@ -373,7 +373,7 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
 
   } else {
 
-    G4cout << G4endl << ">>> Using PbF2 crystal with size " << fPbF2Crystal_x/mm << "x" << fPbF2Crystal_y/mm << "x" << fPbF2Crystal_z/mm << " mm <<<" << G4endl << G4endl;
+    G4cout << G4endl << ">>> Using PbF2 crystal with size " << fPbF2Crystal_x/mm << "x" << fPbF2Crystal_y/mm << "x" << fPbF2Crystal_z/mm << " mm3 <<<" << G4endl << G4endl;
     //G4VPhysicalVolume* crystal_phys =
     new G4PVPlacement(0,G4ThreeVector(),pbf2_crystal_log,"PbF2_Crystal",world_log,false,0);
     //G4VPhysicalVolume* epoxy_phys =
