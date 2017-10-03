@@ -1,16 +1,18 @@
 #!/usr/bin/perl
 
 $nevent = 0;
+$neventpt = 0;
+$neventtot = 0;
 $sumcer = 0; $sumcer2 = 0.;
 $sumcoll = 0; $sumcoll2 = 0;
 $sumacc = 0; $sumacc2 = 0;
 $sumpe = 0; $sumpe2 = 0;
 
-$nacc = 0;
 $npe = 0;
 while (<>) {
     chomp;
     if ($_ =~ m/^\*\*\* Killing Photon Event (\d+) N (\d+) P = ([\d\.\-]+) ([\d\.\-]+) ([\d\.\-]+) mm T = ([\d\.]+) ns E = ([\d\.]+) eV \*\*\*$/) {
+
 	$event = $1;
 	$ncoll = $2;
 	$x = $3;
@@ -18,37 +20,47 @@ while (<>) {
 	$z = $5;
 	$t = $6;
 	$e = $7;
-	$r = sqrt($x*$x+$y*$y);
-	if ($r<11.) { # Active PMT area has 22mm diameter
-	    $nacc++;
-	    if (rand()<quantum_eff($e)) {
-		$npe++;
-	    }
-	}
+	if (rand()<quantum_eff($e)) { $npe++; }
+
     }
-    if ($_ =~ m/^Number of Cerenkov photons produced in this event \: (\d+)$/) {
-	$ncer = $1;
-	printf "Event %3d N gamma Cerenkov %5d Collected %4d (%4.1f\%) Accepted %4d (%4.1f\%) Ph.el. %4d (%4.1f\%)\n"
-	    ,$event,$ncer,$ncoll,100.*$ncoll/$ncer,$nacc,100.*$nacc/$ncer,$npe,100.*$npe/$ncer;
+    if ($_ =~ m/^OpNoviceEventAction - Edep ([\d.]+) MeV NPMT (\d+) NScint (\d+) NCerenkov (\d+)$/) {
 
-	$nevent++;
-	$sumcer += $ncer;
-	$sumcer2 += $ncer*$ncer;
-	$sumcoll += $ncoll;
-	$sumcoll2 += $ncoll*$ncoll;
-	$sumacc += $nacc;
-	$sumacc2 += $nacc*$nacc;
-	$sumpe += $npe;
-	$sumpe2 += $npe*$npe;
+	$neventtot++;
+	    
+	$etot = $1;
+	$npmt = $2;
+	$nsci = $3;
+	$ncer = $4;
 
-	$nacc = 0;
+	if ($ncer>0) {
+
+	    $nevent++;
+
+	    printf "Event %3d N gamma Cerenkov %5d PMT %4d (%4.1f\%) Ph.el. %4d (%4.1f\%)\n"
+		,$event,$ncer,$npmt,100.*$npmt/$ncer,$npe,100.*$npe/$ncer;
+	    $sumcer += $ncer;
+	    $sumcer2 += $ncer*$ncer;
+	    $sumacc += $npmt;
+	    $sumacc2 += $npmt*$npmt;
+	    $sumpe += $npe;
+	    $sumpe2 += $npe*$npe;
+
+	} else {
+
+	    $neventpt++;
+
+	    printf "Event %3d Punch through %d\n",$event,$neventpt;
+
+	}
+
 	$npe = 0;
+
     }
 
 }
 
+printf "Total events %d Punch through %d (%4.1f\%)\n",$neventtot,$neventpt,100.*$neventpt/$neventtot;
 printf "Cerenkov %6.1f %6.1f\n",$sumcer/$nevent,sqrt(($sumcer2-$sumcer*$sumcer/$nevent)/($nevent-1));
-printf "Collectd %6.1f %6.1f\n",$sumcoll/$nevent,sqrt(($sumcoll2-$sumcoll*$sumcoll/$nevent)/($nevent-1));
 printf "Accepted %6.1f %6.1f\n",$sumacc/$nevent,sqrt(($sumacc2-$sumacc*$sumacc/$nevent)/($nevent-1));
 printf "Ph.elec. %6.1f %6.1f\n",$sumpe/$nevent,sqrt(($sumpe2-$sumpe*$sumpe/$nevent)/($nevent-1));
 
