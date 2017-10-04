@@ -70,8 +70,8 @@ void OpNoviceEventAction::BeginOfEventAction(const G4Event* event)
 
 void OpNoviceEventAction::EndOfEventAction(const G4Event* event)
 {   
-  printf("OpNoviceEventAction - Edep %f MeV NPMT %d NScint %d NCerenkov %d\n",
-	 fEdep/MeV,fPMTPhotonCounter,fScinitillationCounter,fCerenkovCounter);
+  printf("OpNoviceEventAction - Event %d Edep %f MeV NPMT %d NScint %d NCerenkov %d\n",
+	 event->GetEventID(),fEdep/MeV,fPMTPhotonCounter,fScinitillationCounter,fCerenkovCounter);
   printf("OpNoviceEventAction - Event %d End\n",event->GetEventID());
 
   // accumulate statistics in run action

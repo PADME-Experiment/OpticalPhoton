@@ -49,20 +49,24 @@ class G4UIcmdWithADoubleAndUnit;
 
 class OpNoviceDetectorMessenger: public G4UImessenger
 {
+
 public:
+
   OpNoviceDetectorMessenger(OpNoviceDetectorConstruction* );
   virtual ~OpNoviceDetectorMessenger();
  
   virtual void SetNewValue(G4UIcommand*, G4String);
  
 private:
+
   OpNoviceDetectorConstruction* fOpNoviceDetector;
-  G4UIdirectory*                fDetectorDir;
-  G4UIcmdWithAnInteger*         fDetectorModeCmd;
-  G4UIcmdWithADoubleAndUnit*    fPbF2CryLenCmd;
-  G4UIcmdWithADouble*           fPbF2CryAbsLenCmd;
-  G4UIcmdWithADouble*           fPbF2CryReflectCmd;
-  G4UIcmdWithADoubleAndUnit*    fBGOCryAbsLenCmd;
+
+  G4UIdirectory*             fDetectorDir;
+  G4UIcmdWithAnInteger*      fDetectorModeCmd;
+  G4UIcmdWithADoubleAndUnit* fPbF2CryLenCmd;
+  G4UIcmdWithADouble*        fPbF2CryAbsLenCmd;
+  G4UIcmdWithADouble*        fBGOCryAbsLenCmd;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -37,6 +37,7 @@
 #include "Randomize.hh"
 
 #include "G4Event.hh"
+#include "G4RunManager.hh"
 #include "G4ParticleGun.hh"
 #include "G4ParticleTable.hh"
 #include "G4ParticleDefinition.hh"
@@ -48,9 +49,6 @@ OpNovicePrimaryGeneratorAction::OpNovicePrimaryGeneratorAction()
  : G4VUserPrimaryGeneratorAction(), 
    fParticleGun(0)
 {
-  G4int n_particle = 1;
-  fParticleGun = new G4ParticleGun(n_particle);
-
   //create a messenger for this class
   fGunMessenger = new OpNovicePrimaryGeneratorMessenger(this);
 
@@ -58,17 +56,17 @@ OpNovicePrimaryGeneratorAction::OpNovicePrimaryGeneratorAction()
 
   fGunMode = 0; // By default generate optical photons with BGO scintillating distributions
 
-  G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
-  //G4ParticleDefinition* particle = particleTable->FindParticle("e+");
-  G4ParticleDefinition* particle = particleTable->FindParticle("opticalphoton");
+  // Shoot 10 optical photons from the center of the crystal
+  fOptPhotonPos = G4ThreeVector(0.,0.,0.);
+  fOptPhotonNr = 10;
 
-
-  fParticleGun->SetParticleDefinition(particle);
-  fParticleGun->SetParticleTime(0.0*ns);
-  fParticleGun->SetParticlePosition(G4ThreeVector(0.0*mm,0.0*mm,0.0*mm));
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(1.,0.,0.));
-  //fParticleGun->SetParticleEnergy(500.0*keV);
-  fParticleGun->SetParticleEnergy(3.0*eV);
+  // Define a default gun for GunMode 1
+  fParticleGun = new G4ParticleGun(1); // Single particle
+  fParticleGun->SetParticleDefinition(G4ParticleTable::GetParticleTable()->FindParticle("gamma"));
+  fParticleGun->SetParticleTime(0.*ns);
+  fParticleGun->SetParticlePosition(G4ThreeVector(0.*mm,0.*mm,-200.*mm));
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+  fParticleGun->SetParticleEnergy(100.*MeV);
 
 }
 
@@ -85,6 +83,7 @@ OpNovicePrimaryGeneratorAction::~OpNovicePrimaryGeneratorAction()
 void OpNovicePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 {
 
+  /*
   if ( fGunMode == 0 ) {
 
     // Choose a random direction
@@ -100,6 +99,44 @@ void OpNovicePrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
   }
   fParticleGun->GeneratePrimaryVertex(anEvent);
+  */
+
+  if ( fGunMode == 0 ) {
+
+    // Create primary vertex at desired position
+    G4PrimaryVertex* vtx = new G4PrimaryVertex(fOptPhotonPos,0.*ns);
+
+    G4ParticleDefinition* opticalphoton = G4ParticleTable::GetParticleTable()->FindParticle("opticalphoton");
+
+    // Generate photons attached to this vertex
+    for (G4int i=0; i<fOptPhotonNr; i++) {
+
+      // Choose a random direction
+      G4double dz = -1.+2.*G4UniformRand();
+      G4double a = sqrt(1.-dz*dz);
+      G4double theta = 360.*G4UniformRand()*deg;
+      G4double dx = a*cos(theta);
+      G4double dy = a*sin(theta);
+
+      // Extract photon energy according to BGO scintillation spectrum
+      G4double e = GetBGOPhotonEnergy();
+
+      // Create photon with given direction and energy and attach it to vertex
+      G4PrimaryParticle* opPhoton = new G4PrimaryParticle(opticalphoton,e*dx,e*dy,e*dz,e);
+      vtx->SetPrimary(opPhoton);
+
+    }
+
+    // Insert this vertex into event
+    anEvent->AddPrimaryVertex(vtx);
+
+    printf("OpNovicePrimaryGeneratorAction - Generated vertex with %d optical photons\n",fOptPhotonNr);
+
+  } else {
+
+    fParticleGun->GeneratePrimaryVertex(anEvent);
+
+  }
 
 }
 
@@ -132,38 +169,6 @@ void OpNovicePrimaryGeneratorAction::SetOptPhotonPolar(G4double angle)
  
  G4ThreeVector polar = std::cos(angle)*e_paralle + std::sin(angle)*e_perpend;
  fParticleGun->SetParticlePolarization(polar);
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void OpNovicePrimaryGeneratorAction::SetOptPhotonPosX(G4double x) {
-  G4ThreeVector pos = fParticleGun->GetParticlePosition();
-  pos.setX(x);
-  fParticleGun->SetParticlePosition(pos);
-  G4cout << "Gun position after X change: " << pos << G4endl;
-}
-
-void OpNovicePrimaryGeneratorAction::SetOptPhotonPosY(G4double y) {
-  G4ThreeVector pos = fParticleGun->GetParticlePosition();
-  pos.setY(y);
-  fParticleGun->SetParticlePosition(pos);
-  G4cout << "Gun position after Y change: " << pos << G4endl;
-}
-
-void OpNovicePrimaryGeneratorAction::SetOptPhotonPosZ(G4double z) {
-  G4ThreeVector pos = fParticleGun->GetParticlePosition();
-  pos.setZ(z);
-  fParticleGun->SetParticlePosition(pos);
-  G4cout << "Gun position after Z change: " << pos << G4endl;
-}
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-void OpNovicePrimaryGeneratorAction::SetGunMode(G4int mode) {
-  fGunMode = mode;
-  if (mode == 0) 
-    fParticleGun->SetParticleDefinition(G4ParticleTable::GetParticleTable()->FindParticle("opticalphoton"));
-  
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -59,8 +59,6 @@ void OpNoviceActionInitialization::BuildForMaster() const
 void OpNoviceActionInitialization::Build() const
 {
 
-  SetUserAction(new OpNovicePrimaryGeneratorAction());
-
   SetUserAction(new OpNoviceRunAction());
 
   SetUserAction(new OpNoviceEventAction()); // Depends on RunAction
@@ -68,6 +66,8 @@ void OpNoviceActionInitialization::Build() const
   SetUserAction(new OpNoviceSteppingAction()); // Depends on EventAction
 
   //SetUserAction(new OpNoviceStackingAction());
+
+  SetUserAction(new OpNovicePrimaryGeneratorAction());
 
 }
 

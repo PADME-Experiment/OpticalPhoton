@@ -35,6 +35,7 @@
 #define OpNovicePrimaryGeneratorAction_h 1
 
 #include "G4VUserPrimaryGeneratorAction.hh"
+#include "G4ThreeVector.hh"
 #include "globals.hh"
 
 class G4ParticleGun;
@@ -55,21 +56,24 @@ public:
 
   virtual void GeneratePrimaries(G4Event*);
 
+  void SetGunMode(G4int m) { fGunMode = m; }
+
   void SetOptPhotonPolar();
   void SetOptPhotonPolar(G4double);
 
-  void SetOptPhotonPosX(G4double);
-  void SetOptPhotonPosY(G4double);
-  void SetOptPhotonPosZ(G4double);
-
-  void SetGunMode(G4int);
+  void SetOptPhotonPos(G4ThreeVector p) { fOptPhotonPos = p; }
+  void SetOptPhotonNr(G4int n) { fOptPhotonNr = n; }
 
 private:
 
-  G4ParticleGun* fParticleGun;
   OpNovicePrimaryGeneratorMessenger* fGunMessenger;
 
+  G4ParticleGun* fParticleGun;
+
   G4int fGunMode;
+
+  G4ThreeVector fOptPhotonPos;
+  G4int fOptPhotonNr;
 
   G4double GetBGOPhotonEnergy();
 

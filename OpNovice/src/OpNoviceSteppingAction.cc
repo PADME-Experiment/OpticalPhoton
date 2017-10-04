@@ -46,9 +46,6 @@
 OpNoviceSteppingAction::OpNoviceSteppingAction() : G4UserSteppingAction()
 {
 
-  fPMTPhotonCounter = 0;
-  fEventNumber = -1;
-
   fDetectorConstruction = (OpNoviceDetectorConstruction*)G4RunManager::GetRunManager()->GetUserDetectorConstruction();
 
   fEventAction = (OpNoviceEventAction*)G4RunManager::GetRunManager()->GetUserEventAction();
@@ -64,12 +61,6 @@ OpNoviceSteppingAction::~OpNoviceSteppingAction()
 
 void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
 {
-  G4int eventNumber = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
-
-  if (eventNumber != fEventNumber) {
-    fEventNumber = eventNumber;
-    fPMTPhotonCounter = 0;
-  }
 
   G4Track* track = step->GetTrack();
 
@@ -93,7 +84,6 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
 	if (g_md.z()>0.) {
 
 	  // Count photon
-	  fPMTPhotonCounter++;
 	  fEventAction->CountPMTPhoton();
 
 	  // Show properties of photon entering EPoxy
@@ -104,8 +94,7 @@ void OpNoviceSteppingAction::UserSteppingAction(const G4Step* step)
 	  G4double g_t = step->GetPostStepPoint()->GetGlobalTime()/ns;
 	  G4double g_e = track->GetTotalEnergy()/eV;
 
-	  printf("*** Killing Photon Event %d N %d P = %.3f %.3f %.3f mm T = %.3f ns E = %.3f eV ***\n",
-		 fEventNumber,fPMTPhotonCounter,g_x,g_y,g_z,g_t,g_e);
+	  printf("*** Killing Photon P = %.3f %.3f %.3f mm T = %.3f ns E = %.3f eV ***\n",g_x,g_y,g_z,g_t,g_e);
 
 	  // Kill the photon
 	  track->SetTrackStatus(fStopAndKill);

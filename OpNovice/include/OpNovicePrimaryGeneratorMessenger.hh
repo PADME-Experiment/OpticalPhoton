@@ -43,25 +43,30 @@ class OpNovicePrimaryGeneratorAction;
 class G4UIdirectory;
 class G4UIcmdWithADoubleAndUnit;
 class G4UIcmdWithAnInteger;
+class G4UIcmdWith3VectorAndUnit;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class OpNovicePrimaryGeneratorMessenger: public G4UImessenger
 {
+
 public:
+
   OpNovicePrimaryGeneratorMessenger(OpNovicePrimaryGeneratorAction* );
   virtual ~OpNovicePrimaryGeneratorMessenger();
  
   virtual void SetNewValue(G4UIcommand*, G4String);
  
 private:
+
   OpNovicePrimaryGeneratorAction* fOpNoviceAction;
-  G4UIdirectory*                  fGunDir;
-  G4UIcmdWithADoubleAndUnit*      fPolarCmd;
-  G4UIcmdWithADoubleAndUnit*      fPosXCmd;
-  G4UIcmdWithADoubleAndUnit*      fPosYCmd;
-  G4UIcmdWithADoubleAndUnit*      fPosZCmd;
-  G4UIcmdWithAnInteger*           fGunModeCmd;
+
+  G4UIdirectory*             fGunDir;
+  G4UIcmdWithAnInteger*      fGunModeCmd;
+  G4UIcmdWithADoubleAndUnit* fPolarCmd;
+  G4UIcmdWith3VectorAndUnit* fOpPhotonPosCmd;
+  G4UIcmdWithAnInteger*      fOpPhotonNrCmd;
+
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

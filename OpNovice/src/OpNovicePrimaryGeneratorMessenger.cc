@@ -39,6 +39,7 @@
 #include "G4UIdirectory.hh"
 #include "G4UIcmdWithADoubleAndUnit.hh"
 #include "G4UIcmdWithAnInteger.hh"
+#include "G4UIcmdWith3VectorAndUnit.hh"
 #include "G4SystemOfUnits.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -51,6 +52,15 @@ OpNovicePrimaryGeneratorMessenger::
   fGunDir = new G4UIdirectory("/OpNovice/gun/");
   fGunDir->SetGuidance("PrimaryGenerator control");
 
+  fGunModeCmd = new G4UIcmdWithAnInteger("/OpNovice/gun/mode",this);
+  fGunModeCmd->SetGuidance("Choose gun functioning mode");
+  fGunModeCmd->SetGuidance("0: generate optical photons with BGO scintillation energy/angle distribution");
+  fGunModeCmd->SetGuidance("1: generate particle with fixed initial kinematics");
+  fGunModeCmd->SetParameterName("mode",true);
+  fGunModeCmd->SetDefaultValue(0);
+  fGunModeCmd->SetRange("mode == 0 || mode == 1");
+  fGunModeCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
   fPolarCmd = new G4UIcmdWithADoubleAndUnit("/OpNovice/gun/optPhotonPolar",this);
   fPolarCmd->SetGuidance("Set linear polarization");
   fPolarCmd->SetGuidance("  angle w.r.t. (k,n) plane");
@@ -60,41 +70,19 @@ OpNovicePrimaryGeneratorMessenger::
   fPolarCmd->SetDefaultUnit("deg");
   fPolarCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fPosXCmd = new G4UIcmdWithADoubleAndUnit("/OpNovice/gun/optPhotonPosX",this);
-  fPosXCmd->SetGuidance("Set X coordinate of optical photons starting position");
-  fPosXCmd->SetParameterName("posx",true);
-  fPosXCmd->SetUnitCategory("Length");
-  fPosXCmd->SetDefaultUnit("mm");
-  fPosXCmd->SetDefaultValue(0.0);
-  fPosXCmd->SetRange("posx > -10.5 && posx < 10.5");
-  fPosXCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fOpPhotonPosCmd = new G4UIcmdWith3VectorAndUnit("/OpNovice/gun/optPhotonPos",this);
+  fOpPhotonPosCmd->SetGuidance("Set coordinates of optical photons starting position");
+  fOpPhotonPosCmd->SetParameterName("X","Y","Z",true);
+  fOpPhotonPosCmd->SetUnitCategory("Length");
+  fOpPhotonPosCmd->SetDefaultUnit("mm");
+  fOpPhotonPosCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fPosYCmd = new G4UIcmdWithADoubleAndUnit("/OpNovice/gun/optPhotonPosY",this);
-  fPosYCmd->SetGuidance("Set Y coordinate of optical photons starting position");
-  fPosYCmd->SetParameterName("posy",true);
-  fPosYCmd->SetUnitCategory("Length");
-  fPosYCmd->SetDefaultUnit("mm");
-  fPosYCmd->SetDefaultValue(0.0);
-  fPosYCmd->SetRange("posy > -10.5 && posy < 10.5");
-  fPosYCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-
-  fPosZCmd = new G4UIcmdWithADoubleAndUnit("/OpNovice/gun/optPhotonPosZ",this);
-  fPosZCmd->SetGuidance("Set Z coordinate of optical photons starting position");
-  fPosZCmd->SetParameterName("posz",true);
-  fPosZCmd->SetUnitCategory("Length");
-  fPosZCmd->SetDefaultUnit("mm");
-  fPosZCmd->SetDefaultValue(0.0);
-  fPosZCmd->SetRange("posz > -115. && posz < 115.");
-  fPosZCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-
-  fGunModeCmd = new G4UIcmdWithAnInteger("/OpNovice/gun/mode",this);
-  fGunModeCmd->SetGuidance("Choose gun functioning mode");
-  fGunModeCmd->SetGuidance("0: generate optical photon with BGO scintillation energy/angle distribution");
-  fGunModeCmd->SetGuidance("1: generate particle with fixed initial kinematics");
-  fGunModeCmd->SetParameterName("mode",true);
-  fGunModeCmd->SetDefaultValue(0);
-  fGunModeCmd->SetRange("mode == 0 || mode == 1");
-  fGunModeCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+  fOpPhotonNrCmd = new G4UIcmdWithAnInteger("/OpNovice/gun/optPhotonNr",this);
+  fOpPhotonNrCmd->SetGuidance("Define number of optical photons to generate at each event");
+  fOpPhotonNrCmd->SetParameterName("n",true);
+  fOpPhotonNrCmd->SetDefaultValue(100);
+  fOpPhotonNrCmd->SetRange("n>0");
+  fOpPhotonNrCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
 }
 
@@ -103,9 +91,8 @@ OpNovicePrimaryGeneratorMessenger::
 OpNovicePrimaryGeneratorMessenger::~OpNovicePrimaryGeneratorMessenger()
 {
   delete fPolarCmd;
-  delete fPosXCmd;
-  delete fPosYCmd;
-  delete fPosZCmd;
+  delete fOpPhotonPosCmd;
+  delete fOpPhotonNrCmd;
   delete fGunModeCmd;
   delete fGunDir;
 }
@@ -125,11 +112,14 @@ void OpNovicePrimaryGeneratorMessenger::SetNewValue(
       }
   }
 
-  if ( command == fPosXCmd ) fOpNoviceAction->SetOptPhotonPosX(fPosXCmd->GetNewDoubleValue(newValue));
-  if ( command == fPosYCmd ) fOpNoviceAction->SetOptPhotonPosY(fPosYCmd->GetNewDoubleValue(newValue));
-  if ( command == fPosZCmd ) fOpNoviceAction->SetOptPhotonPosZ(fPosZCmd->GetNewDoubleValue(newValue));
+  if ( command == fGunModeCmd )
+    fOpNoviceAction->SetGunMode(fGunModeCmd->GetNewIntValue(newValue));
 
-  if ( command == fGunModeCmd ) fOpNoviceAction->SetGunMode(fGunModeCmd->GetNewIntValue(newValue));
+  if ( command == fOpPhotonPosCmd )
+    fOpNoviceAction->SetOptPhotonPos(fOpPhotonPosCmd->GetNew3VectorValue(newValue));
+
+  if ( command == fOpPhotonNrCmd )
+    fOpNoviceAction->SetOptPhotonNr(fOpPhotonNrCmd->GetNewIntValue(newValue));
 
 }
 

@@ -57,9 +57,6 @@ private:
 
   OpNoviceEventAction* fEventAction;
 
-  G4int fPMTPhotonCounter;
-  G4int fEventNumber;
-
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

@@ -62,14 +62,16 @@ OpNoviceDetectorConstruction::OpNoviceDetectorConstruction()
   fWorld_x = fWorld_y = fWorld_z = 1.0*m;
 
   fBGOCrystal_x  = fBGOCrystal_y  = 21.*mm; fBGOCrystal_z  = 23.*cm;
-  fBGOCrystal_abslen = 3.*m;
+  fBGOCrystal_abslen = 1.; // Default scale factor
+
+  fBGOEpoxyRadius = 1.*cm; // 1/2 inch
+  fBGOEpoxyThick = 1.*mm;
 
   fPbF2Crystal_x = fPbF2Crystal_y = 30.*mm; fPbF2Crystal_z = 14.*cm;
   fPbF2Crystal_abslen = 1.; // Default scale factor
-  fPbF2Crystal_reflectivity = 0.95; // Default reflectivity factor
 
-  fEpoxyRadius = 1.27*cm; // 1/2 inch
-  fEpoxyThick = 1.*mm;
+  fPbF2EpoxyRadius = 1.27*cm; // 1/2 inch
+  fPbF2EpoxyThick = 1.*mm;
 
   fPaint = 100.*um; // Thickness of paint coating around crystal
 
@@ -132,7 +134,7 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
 
 
   //
-  // BGO
+  // BGO (Bi4Ge3O12)
   //
 
   G4double bgoPhotonEnergy[] = {
@@ -186,34 +188,26 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
 
   // Need to find the right table
   G4double bgoAbsorption[] = {
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen, fBGOCrystal_abslen,
-      fBGOCrystal_abslen };
+    3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
+    3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
+    3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
+    3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
+    3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
+    3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
+    3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
+    3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
+    3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
+    3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
+    3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
+    3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m, 3.*m,
+    3.*m, 3.*m, 3.*m, 3.*m, 3.*m };
   assert(sizeof(bgoAbsorption) == sizeof(bgoPhotonEnergy));
   
+  // Apply overall scale to absorption length spectrum
+  for(G4int i=0; i<bgoNEntries; i++) {
+    bgoAbsorption[i] *= fBGOCrystal_abslen;
+  }
+
   G4MaterialPropertiesTable* bgoMPT = new G4MaterialPropertiesTable();
   bgoMPT->AddProperty("RINDEX",bgoPhotonEnergy,bgoRefractiveIndex,bgoNEntries)->SetSpline(true);
   bgoMPT->AddProperty("ABSLENGTH",bgoPhotonEnergy,bgoAbsorption,bgoNEntries)->SetSpline(true);
@@ -336,58 +330,77 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
 
   Air->SetMaterialPropertiesTable(airMPT);
 
-//
-// ------------- Volumes --------------
+  //
+  // ------------- Volumes --------------
 
-// The experimental Hall
-//
+  // The experimental Hall
+  //
   G4Box* world_box = new G4Box("World",0.5*fWorld_x,0.5*fWorld_y,0.5*fWorld_z);
   G4LogicalVolume* world_log = new G4LogicalVolume(world_box,Air,"World",0,0,0);
   world_log->SetVisAttributes(G4VisAttributes::Invisible);
   G4VPhysicalVolume* world_phys = new G4PVPlacement(0,G4ThreeVector(),world_log,"World",0,false,0);
 
-// The paint coating outside BGO
+  //G4VPhysicalVolume* crystal_phys = 0;
+  //G4VPhysicalVolume* epoxy_phys = 0;
+
+  if ( fDetectorMode == 0 ) {
+
+    // The BGO crystal
+
+    G4Box* bgo_crystal_box = new G4Box("BGO_Crystal",0.5*fBGOCrystal_x,0.5*fBGOCrystal_y,0.5*fBGOCrystal_z);
+    G4LogicalVolume* bgo_crystal_log = new G4LogicalVolume(bgo_crystal_box,BGO,"BGO_Crystal",0,0,0);
+
+    G4Tubs* bgo_resin_tubs = new G4Tubs("Epoxy_Resin",0.,fBGOEpoxyRadius,0.5*fBGOEpoxyThick,0.*deg,360.*deg);
+    G4LogicalVolume* bgo_resin_log = new G4LogicalVolume(bgo_resin_tubs,Epoxy,"Epoxy_Resin",0,0,0);
+    G4ThreeVector bgo_resin_pos = G4ThreeVector(0.,0.,0.5*(fBGOCrystal_z+fBGOEpoxyThick));
+
+  // The paint coating outside BGO
   //G4Box* paint_box = new G4Box("Paint",0.5*(fCrystal_x+2.*fPaint),0.5*(fCrystal_y+2.*fPaint),0.5*(fCrystal_z+2.*fPaint));
   //G4LogicalVolume* paint_log = new G4LogicalVolume(paint_box,EJ510Paint,"Paint",0,0,0);
   //G4VPhysicalVolume* paint_phys = new G4PVPlacement(0,G4ThreeVector(),paint_log,"Paint",world_log,false,0);
 
-// The BGO crystal
-  G4Box* bgo_crystal_box = new G4Box("BGO_Crystal",0.5*fBGOCrystal_x,0.5*fBGOCrystal_y,0.5*fBGOCrystal_z);
-  G4LogicalVolume* bgo_crystal_log = new G4LogicalVolume(bgo_crystal_box,BGO,"BGO_Crystal",0,0,0);
-  //G4VPhysicalVolume* crystal_phys = new G4PVPlacement(0,G4ThreeVector(),crystal_log,"Crystal",paint_log,false,0);
-
-// The PbF2 crystal
-  G4Box* pbf2_crystal_box = new G4Box("PbF2_Crystal",0.5*fPbF2Crystal_x,0.5*fPbF2Crystal_y,0.5*fPbF2Crystal_z);
-  G4LogicalVolume* pbf2_crystal_log = new G4LogicalVolume(pbf2_crystal_box,PbF2,"PbF2_Crystal",0,0,0);
-
-  // The Epoxy resin cylinder
-  G4Tubs* resin_tubs = new G4Tubs("Epoxy_Resin",0.,fEpoxyRadius,0.5*fEpoxyThick,0.*deg,360.*deg);
-  G4LogicalVolume* resin_log = new G4LogicalVolume(resin_tubs,Epoxy,"Epoxy_Resin",0,0,0);
-
-  if ( fDetectorMode == 0 ) {
-
     G4cout << G4endl << ">>> Using BGO crystal with size " << fBGOCrystal_x/mm << "x" << fBGOCrystal_y/mm << "x" << fBGOCrystal_z/mm << " mm <<<" << G4endl << G4endl;
-    //G4VPhysicalVolume* crystal_phys = 
+
+    //crystal_phys = 
     new G4PVPlacement(0,G4ThreeVector(),bgo_crystal_log,"BGO_Crystal",world_log,false,0);
+    //epoxy_phys = 
+    new G4PVPlacement(0,bgo_resin_pos,bgo_resin_log,"Epoxy_Resin",world_log,false,0);
+
     fCrystalVolume = bgo_crystal_log;
 
   } else {
 
+    // The PbF2 crystal
+
+    G4Box* pbf2_crystal_box = new G4Box("PbF2_Crystal",0.5*fPbF2Crystal_x,0.5*fPbF2Crystal_y,0.5*fPbF2Crystal_z);
+    G4LogicalVolume* pbf2_crystal_log = new G4LogicalVolume(pbf2_crystal_box,PbF2,"PbF2_Crystal",0,0,0);
+
+    G4Tubs* pbf2_resin_tubs = new G4Tubs("Epoxy_Resin",0.,fPbF2EpoxyRadius,0.5*fPbF2EpoxyThick,0.*deg,360.*deg);
+    G4LogicalVolume* pbf2_resin_log = new G4LogicalVolume(pbf2_resin_tubs,Epoxy,"Epoxy_Resin",0,0,0);
+    G4ThreeVector pbf2_resin_pos = G4ThreeVector(0.,0.,0.5*(fPbF2Crystal_z+fPbF2EpoxyThick));
+
     G4cout << G4endl << ">>> Using PbF2 crystal with size " << fPbF2Crystal_x/mm << "x" << fPbF2Crystal_y/mm << "x" << fPbF2Crystal_z/mm << " mm3 <<<" << G4endl << G4endl;
-    //G4VPhysicalVolume* crystal_phys =
+
+    //crystal_phys = 
     new G4PVPlacement(0,G4ThreeVector(),pbf2_crystal_log,"PbF2_Crystal",world_log,false,0);
-    //G4VPhysicalVolume* epoxy_phys =
-    new G4PVPlacement(0,G4ThreeVector(0.,0.,0.5*(fPbF2Crystal_z+fEpoxyThick)),resin_log,"Epoxy_Resin",world_log,false,0);
+    //epoxy_phys = 
+    new G4PVPlacement(0,pbf2_resin_pos,pbf2_resin_log,"Epoxy_Resin",world_log,false,0);
+
     fCrystalVolume = pbf2_crystal_log;
 
   }
 
-// ------------- Surfaces --------------
+  // ------------- Surfaces --------------
+
+  // We start with the default surface model (dielectric_dielectric, polished)
+  // BGO has reflective painting which will be added later (using dielectric_LUT?)
+  // PbF2 has absorbing painting
+  // Both BGO and PbF2 surfaces should be "ground"
 
   //
   // BGO
   //
-
+  /*
   G4OpticalSurface* opBGOSurface =  new G4OpticalSurface("BGOSurface");
   // BGO surface with TiO painting
   //opBGOSurface->SetType(dielectric_LUT);
@@ -415,6 +428,7 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
 
   //G4LogicalSkinSurface* bgoSurface = 
   new G4LogicalSkinSurface("BGOSurface",bgo_crystal_log,opBGOSurface);
+  */
 
   //
   // PbF2
@@ -454,4 +468,12 @@ G4double OpNoviceDetectorConstruction::GetCrystalLength()
 {
   if ( fDetectorMode == 0 ) return fBGOCrystal_z;
   return fPbF2Crystal_z;
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+G4double OpNoviceDetectorConstruction::GetPMTRadius()
+{
+  if ( fDetectorMode == 0 ) return fBGOEpoxyRadius;
+  return fPbF2EpoxyRadius;
 }

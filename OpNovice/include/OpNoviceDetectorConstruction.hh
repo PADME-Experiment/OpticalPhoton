@@ -58,10 +58,9 @@ public:
 
   void SetPbF2CrystalLength(G4double l) { fPbF2Crystal_z = l; }
   void SetPbF2CrystalAbsLength(G4double l) { fPbF2Crystal_abslen = l; }
-  void SetPbF2CrystalReflectivity(G4double r) { fPbF2Crystal_reflectivity = r; }
 
   G4double GetCrystalLength();
-  G4double GetPMTRadius() { return fEpoxyRadius; };
+  G4double GetPMTRadius();
 
   G4LogicalVolume* GetCrystalVolume() { return fCrystalVolume; }
 
@@ -81,17 +80,19 @@ private:
   G4double fBGOCrystal_y;
   G4double fBGOCrystal_z;
 
-  G4double fBGOCrystal_abslen;
+  G4double fBGOCrystal_abslen; // Scale factor for absorption length spectrum
+
+  G4double fBGOEpoxyRadius;
+  G4double fBGOEpoxyThick;
 
   G4double fPbF2Crystal_x;
   G4double fPbF2Crystal_y;
   G4double fPbF2Crystal_z;
   
   G4double fPbF2Crystal_abslen; // Scale factor for absorption length spectrum
-  G4double fPbF2Crystal_reflectivity; // Reflectivity factor
 
-  G4double fEpoxyRadius;
-  G4double fEpoxyThick;
+  G4double fPbF2EpoxyRadius;
+  G4double fPbF2EpoxyThick;
 
   G4double fPaint;
 

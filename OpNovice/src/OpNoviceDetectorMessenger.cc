@@ -61,14 +61,10 @@ OpNoviceDetectorMessenger::
   fDetectorModeCmd->SetRange("mode == 0 || mode == 1");
   fDetectorModeCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fBGOCryAbsLenCmd = new G4UIcmdWithADoubleAndUnit("/OpNovice/detector/bgo_crystal_abslen",this);
-  fBGOCryAbsLenCmd->SetGuidance("Set absorption length of BGO crystal");
-  fBGOCryAbsLenCmd->SetGuidance("N.B. Assumes it does not depend on photon energy");
-  fBGOCryAbsLenCmd->SetParameterName("len",true);
-  fBGOCryAbsLenCmd->SetUnitCategory("Length");
-  fBGOCryAbsLenCmd->SetDefaultUnit("cm");
-  fBGOCryAbsLenCmd->SetDefaultValue(300.0);
-  fBGOCryAbsLenCmd->SetRange("len > 0. && len < 1000.");
+  fBGOCryAbsLenCmd = new G4UIcmdWithADouble("/OpNovice/detector/bgo_crystal_abslen_scale",this);
+  fBGOCryAbsLenCmd->SetGuidance("Set scale factor for absorption length of BGO crystal");
+  fBGOCryAbsLenCmd->SetParameterName("fac",true);
+  fBGOCryAbsLenCmd->SetRange("fac > 0.");
   fBGOCryAbsLenCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
   fPbF2CryLenCmd = new G4UIcmdWithADoubleAndUnit("/OpNovice/detector/pbf2_crystal_length",this);
@@ -86,12 +82,6 @@ OpNoviceDetectorMessenger::
   fPbF2CryAbsLenCmd->SetRange("fac > 0.");
   fPbF2CryAbsLenCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
-  fPbF2CryReflectCmd = new G4UIcmdWithADouble("/OpNovice/detector/pbf2_crystal_reflectivity",this);
-  fPbF2CryReflectCmd->SetGuidance("Set reflectivity factor of external surface of PbF2 crystal");
-  fPbF2CryReflectCmd->SetParameterName("ref",true);
-  fPbF2CryReflectCmd->SetRange("ref >= 0. && ref <= 1.");
-  fPbF2CryReflectCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
-
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -102,7 +92,6 @@ OpNoviceDetectorMessenger::~OpNoviceDetectorMessenger()
   delete fBGOCryAbsLenCmd;
   delete fPbF2CryLenCmd;
   delete fPbF2CryAbsLenCmd;
-  delete fPbF2CryReflectCmd;
   delete fDetectorDir;
 }
 
@@ -111,11 +100,17 @@ OpNoviceDetectorMessenger::~OpNoviceDetectorMessenger()
 void OpNoviceDetectorMessenger::SetNewValue( G4UIcommand* command, G4String newValue )
 {
 
-  if ( command == fDetectorModeCmd ) fOpNoviceDetector->SetDetectorMode(fDetectorModeCmd->GetNewIntValue(newValue));
-  if ( command == fBGOCryAbsLenCmd ) fOpNoviceDetector->SetBGOCrystalAbsLength(fBGOCryAbsLenCmd->GetNewDoubleValue(newValue));
-  if ( command == fPbF2CryLenCmd ) fOpNoviceDetector->SetPbF2CrystalLength(fPbF2CryLenCmd->GetNewDoubleValue(newValue));
-  if ( command == fPbF2CryAbsLenCmd ) fOpNoviceDetector->SetPbF2CrystalAbsLength(fPbF2CryAbsLenCmd->GetNewDoubleValue(newValue));
-  if ( command == fPbF2CryReflectCmd ) fOpNoviceDetector->SetPbF2CrystalReflectivity(fPbF2CryReflectCmd->GetNewDoubleValue(newValue));
+  if ( command == fDetectorModeCmd )
+    fOpNoviceDetector->SetDetectorMode(fDetectorModeCmd->GetNewIntValue(newValue));
+
+  if ( command == fBGOCryAbsLenCmd )
+    fOpNoviceDetector->SetBGOCrystalAbsLength(fBGOCryAbsLenCmd->GetNewDoubleValue(newValue));
+
+  if ( command == fPbF2CryLenCmd )
+    fOpNoviceDetector->SetPbF2CrystalLength(fPbF2CryLenCmd->GetNewDoubleValue(newValue));
+
+  if ( command == fPbF2CryAbsLenCmd )
+    fOpNoviceDetector->SetPbF2CrystalAbsLength(fPbF2CryAbsLenCmd->GetNewDoubleValue(newValue));
 
 }
 
