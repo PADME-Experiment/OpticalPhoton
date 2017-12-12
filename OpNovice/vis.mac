@@ -11,6 +11,10 @@
 #/OpNovice/detector/pbf2_crystal_length 14. cm
 #/OpNovice/detector/pbf2_crystal_abslen_scale 1.
 
+# Define crystal surface model
+# 0: Open (default), 1: Specular, 2: Diffuse, 3: Black, 4: Tedlar, 5: Millipore
+#/OpNovice/detector/crystal_surface 0
+
 /run/initialize
 
 # Switch off tracking/boundary messages
@@ -53,7 +57,7 @@
 /vis/drawVolume
 #
 # Specify view angle:
-#/vis/viewer/set/viewpointThetaPhi 90. 0.
+/vis/viewer/set/viewpointThetaPhi 90. 0.
 #
 # Specify zoom value:
 /vis/viewer/zoom 1.5

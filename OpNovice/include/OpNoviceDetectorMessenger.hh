@@ -66,6 +66,7 @@ private:
   G4UIcmdWithADoubleAndUnit* fPbF2CryLenCmd;
   G4UIcmdWithADouble*        fPbF2CryAbsLenCmd;
   G4UIcmdWithADouble*        fBGOCryAbsLenCmd;
+  G4UIcmdWithAnInteger*      fCrystalSurfaceCmd;
 
 };
 

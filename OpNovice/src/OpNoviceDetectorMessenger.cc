@@ -82,6 +82,19 @@ OpNoviceDetectorMessenger::
   fPbF2CryAbsLenCmd->SetRange("fac > 0.");
   fPbF2CryAbsLenCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
+  fCrystalSurfaceCmd = new G4UIcmdWithAnInteger("/OpNovice/detector/crystal_surface",this);
+  fCrystalSurfaceCmd->SetGuidance("Choose surface model for crystal");
+  fCrystalSurfaceCmd->SetGuidance("0: Open (default)");
+  fCrystalSurfaceCmd->SetGuidance("1: Specular");
+  fCrystalSurfaceCmd->SetGuidance("2: Diffuse");
+  fCrystalSurfaceCmd->SetGuidance("3: Black");
+  fCrystalSurfaceCmd->SetGuidance("4: Tedlar");
+  fCrystalSurfaceCmd->SetGuidance("5: Millipore");
+  fCrystalSurfaceCmd->SetParameterName("surf",true);
+  fCrystalSurfaceCmd->SetDefaultValue(0);
+  fCrystalSurfaceCmd->SetRange("surf >= 0 && surf <= 5");
+  fCrystalSurfaceCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
@@ -92,6 +105,7 @@ OpNoviceDetectorMessenger::~OpNoviceDetectorMessenger()
   delete fBGOCryAbsLenCmd;
   delete fPbF2CryLenCmd;
   delete fPbF2CryAbsLenCmd;
+  delete fCrystalSurfaceCmd;
   delete fDetectorDir;
 }
 
@@ -111,6 +125,9 @@ void OpNoviceDetectorMessenger::SetNewValue( G4UIcommand* command, G4String newV
 
   if ( command == fPbF2CryAbsLenCmd )
     fOpNoviceDetector->SetPbF2CrystalAbsLength(fPbF2CryAbsLenCmd->GetNewDoubleValue(newValue));
+
+  if ( command == fCrystalSurfaceCmd )
+    fOpNoviceDetector->SetCrystalSurfaceModel(fCrystalSurfaceCmd->GetNewIntValue(newValue));
 
 }
 

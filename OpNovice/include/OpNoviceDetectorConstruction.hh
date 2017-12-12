@@ -38,6 +38,7 @@
 #include "G4VUserDetectorConstruction.hh"
 
 class OpNoviceDetectorMessenger;
+class G4OpticalSurface;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -54,6 +55,9 @@ public:
   virtual G4VPhysicalVolume* Construct();
   void SetDetectorMode(G4int m) { fDetectorMode = m; }
 
+  void SetCrystalSurfaceModel(G4int m) { fCrystalSurfaceModel = m; }
+  G4int GetCrystalSurfaceModel() { return fCrystalSurfaceModel; }
+
   void SetBGOCrystalAbsLength(G4double l) { fBGOCrystal_abslen = l; }
 
   void SetPbF2CrystalLength(G4double l) { fPbF2Crystal_z = l; }
@@ -63,6 +67,23 @@ public:
   G4double GetPMTRadius();
 
   G4LogicalVolume* GetCrystalVolume() { return fCrystalVolume; }
+
+  // Optical surfaces
+
+  G4OpticalSurface* PolishedMetal();
+  G4OpticalSurface* PolishedMetalReverse();
+  G4OpticalSurface* Specular();
+  G4OpticalSurface* SpecularReverse();
+  G4OpticalSurface* Diffuse();
+  G4OpticalSurface* DiffuseReverse();
+  G4OpticalSurface* Black();
+  G4OpticalSurface* BlackReverse();
+  G4OpticalSurface* Tedlar();
+  G4OpticalSurface* TedlarReverse();
+  G4OpticalSurface* Millipore();
+  G4OpticalSurface* MilliporeReverse();
+  G4OpticalSurface* Open();
+  G4OpticalSurface* OpenReverse();
 
 private:
 
@@ -95,6 +116,9 @@ private:
   G4double fPbF2EpoxyThick;
 
   G4double fPaint;
+
+  G4int fCrystalSurfaceModel; // Optical model to use for crystal surface
+                              // 0: Open, 1: Specular, 2: Diffuse, 3: Black, 4: Tedlar, 5: Millipore
 
 };
 
