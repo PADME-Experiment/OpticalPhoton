@@ -420,6 +420,8 @@ G4VPhysicalVolume* OpNoviceDetectorConstruction::Construct()
        G4cout << ">>> Crystal surface model is 5 (Millipore)" << G4endl << G4endl;
        crystalWorldSurface = Millipore();
        worldCrystalSurface = MilliporeReverse();
+     } else if ( fCrystalSurfaceModel == 6 ) {
+       G4cout << ">>> Crystal surface model is 6 (Open and polished)" << G4endl << G4endl;
      } else {
        G4cout << ">>> Unknown crystal surface model required: " << fCrystalSurfaceModel << G4endl << G4endl;
      }

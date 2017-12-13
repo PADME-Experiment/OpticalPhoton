@@ -414,8 +414,11 @@ for ($i=0;$i<$nbin+1;$i++) {
 	    last;
 	}
     }
+    # Compute correction factor for light reflections in transmission measurements
+    $n = $ref_idx[$i];
+    $corr = (1.+$n)*(1.+$n)*(1.+$n)*(1.+$n)/(16.*$n*$n);
     if ($transp > 0. ) {
-	$abs_len[$i] = -$sample_size/log($transp);
+	$abs_len[$i] = -$sample_size/log($transp*$corr);
     } else {
 	$abs_len[$i] = 0.;
     }

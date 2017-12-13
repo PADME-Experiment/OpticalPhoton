@@ -90,9 +90,10 @@ OpNoviceDetectorMessenger::
   fCrystalSurfaceCmd->SetGuidance("3: Black");
   fCrystalSurfaceCmd->SetGuidance("4: Tedlar");
   fCrystalSurfaceCmd->SetGuidance("5: Millipore");
+  fCrystalSurfaceCmd->SetGuidance("6: Open and polished");
   fCrystalSurfaceCmd->SetParameterName("surf",true);
   fCrystalSurfaceCmd->SetDefaultValue(0);
-  fCrystalSurfaceCmd->SetRange("surf >= 0 && surf <= 5");
+  fCrystalSurfaceCmd->SetRange("surf >= 0 && surf <= 6");
   fCrystalSurfaceCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
 }
